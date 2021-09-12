@@ -1,0 +1,17 @@
+<p>hotel-list works!</p>
+<button type="button" name="button" (click)="onGetHotels()">Get Hotels (will remove btn later)</button>
+
+<div class="row">
+  <div class="col">
+    <app-hotel-list-item *ngFor="let hotel of hotels"
+    [hotelElement] = hotel
+    ></app-hotel-list-item>
+
+  </div>
+  <div class="col">
+    <h1 style="border: 1px black solid; position: sticky; top: 0;">Put filters over here</h1>
+
+  </div>
+
+
+</div>

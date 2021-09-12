@@ -1,0 +1,23 @@
+<div style="border: black solid 1px; width: 75%; margin-bottom: 10px;">
+  <div>
+    <h2>
+      {{hotelElement.name}}
+    </h2>
+    <p>
+      Location: {{hotelElement.location}}
+    </p>
+    <p>
+      Price (weekday): ${{hotelElement.pricePerNightWeekday}}
+    </p>
+    <p>
+      Price (weekend): ${{hotelElement.pricePerNightWeekend}}
+    </p>
+    <p>
+      Amenities:
+      <span *ngFor="let amenity of hotelElement.amenities">
+        {{amenity}}
+      </span>
+    </p>
+  </div>
+
+</div>
