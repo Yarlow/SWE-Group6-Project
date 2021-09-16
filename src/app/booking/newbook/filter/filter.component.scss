@@ -1,0 +1,53 @@
+::ng-deep {
+  .filterForm .ngx-slider .ngx-slider-bar {
+    background: #ffe4d1;
+    height: 2px;
+  }
+  .filterForm .ngx-slider .ngx-slider-selection {
+    background: orange;
+  }
+
+  .filterForm .ngx-slider .ngx-slider-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: #333;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .filterForm .ngx-slider .ngx-slider-pointer:after {
+    display: none;
+  }
+
+  .filterForm .ngx-slider .ngx-slider-bubble {
+    bottom: 14px;
+  }
+
+  .filterForm .ngx-slider .ngx-slider-limit {
+    font-weight: bold;
+    color: orange;
+  }
+
+  .filterForm .ngx-slider .ngx-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #ffe4d1;
+    top: -1px;
+  }
+
+  .filterForm .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+    background: orange;
+  }
+
+  .ngx-slider-model-value::before {
+    content: '$';
+  }
+
+  .ngx-slider-model-high::before {
+    content: '$';
+  }
+}

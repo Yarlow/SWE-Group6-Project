@@ -3,5 +3,7 @@
 }
 
 .content {
-  margin: 10px 30px;
+  min-height: 100%;
+  padding: 10px 30px;
+  /* background-color: grey;  NOW IN ../../style.css */
 }

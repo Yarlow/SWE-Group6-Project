@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Hotel } from '../hotels/hotel.model';
 
 @Injectable({
@@ -58,12 +59,31 @@ export class HotelService {
       amenities: ["breakfast"]
     }
   ]
+
+  private hotelsForView: Hotel[];
+
+  //  DELTE ABOVE ARRAY EVENTUALLY
+
+  private hotelsUpdated = new Subject<Hotel[]>()
+
   constructor() { }
 
 
   getHotels() {
-    console.log(this.hotels)
-    return this.hotels;
+    this.hotelsForView = this.hotels
+    return this.hotelsForView
+  }
+
+  getHotelUpdateListener() {
+    return this.hotelsUpdated.asObservable()
+  }
+
+  filterHotels(userFilter: {nameFilter:string, priceFilter: number[], }) {
+    this.hotelsForView = this.hotels.filter(function(hotel) {
+      return hotel.name.toLowerCase().includes(userFilter.nameFilter.toLowerCase()) && hotel.pricePerNightWeekday > userFilter.priceFilter[0] && hotel.pricePerNightWeekday < userFilter.priceFilter[1]
+    })
+    console.log(this.hotelsForView)
+    this.hotelsUpdated.next([...this.hotelsForView])
   }
 
 }

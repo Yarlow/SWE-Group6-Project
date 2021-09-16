@@ -1,0 +1,30 @@
+
+<mat-card class="filterForm">
+  <h3>Filter (need backend, kinda works tho)</h3>
+  <form (submit)="onFilter()" [formGroup]="form">
+    <mat-form-field>
+      <input type="text"
+        matInput
+        formControlName="hotelName"
+        placeholder="Hotel Name">
+    </mat-form-field>
+
+    <p style="margin-bottom:0;">Weekday Price Per Night</p>
+    <ngx-slider [options]="options" formControlName="valueSlider"></ngx-slider>
+
+
+    <mat-form-field>
+      <mat-select placeholder="Amenities">
+        <mat-option *ngFor="let amenity of amenities; let i = index" [value]="amenity">
+          <mat-checkbox [checked]="selected === i" (change)="onChange(amenity); selected = i"> {{amenity}} </mat-checkbox>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="bottomBottons">
+      <button class="btn btn-success" style="margin-right: 10px;">Apply</button>
+      <button class="btn btn-warning">Clear</button>
+    </div>
+
+  </form>
+</mat-card>

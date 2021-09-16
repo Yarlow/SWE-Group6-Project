@@ -1,0 +1,13 @@
+/* ::ng-deep {
+  .filterForm .ngx-slider .ngx-slider-bar {
+    background: orange;
+    height: 2px;
+  }
+} */
+
+::ng-deep {
+  .ngx-slider-model-value::before {
+    content: '$';
+
+  }
+}
