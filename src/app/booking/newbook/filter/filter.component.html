@@ -9,17 +9,35 @@
         placeholder="Hotel Name">
     </mat-form-field>
 
-    <p style="margin-bottom:0;">Weekday Price Per Night</p>
-    <ngx-slider [options]="options" formControlName="valueSlider"></ngx-slider>
+    <!-- <p style="">Weekday Price Per Night</p> -->
+    <div>
+      <button mat-raised-button (click)="showWeekdaySlider = !showWeekdaySlider" color="accent">Weekday Price</button>
+      <ngx-slider *ngIf="showWeekdaySlider" [options]="options" formControlName="weekdayPrice"></ngx-slider>
+    </div>
+
+    <!-- <p style="">Weeknight Price Per Night</p> -->
+    <div style="margin-top: 10px;">
+      <button mat-raised-button (click)="showWeekendSlider = !showWeekendSlider" color="accent">Weekend Price</button>
+      <ngx-slider *ngIf="showWeekendSlider" [options]="options" formControlName="weekendPrice"></ngx-slider>
+
+    </div>
 
 
-    <mat-form-field>
+    <!-- <mat-form-field>
       <mat-select placeholder="Amenities">
         <mat-option *ngFor="let amenity of amenities; let i = index" [value]="amenity">
           <mat-checkbox [checked]="selected === i" (change)="onChange(amenity); selected = i"> {{amenity}} </mat-checkbox>
         </mat-option>
       </mat-select>
+    </mat-form-field> -->
+
+    <mat-form-field>
+      <mat-label>Amenities</mat-label>
+      <mat-select formControlName="selectedAmenities" multiple>
+        <mat-option *ngFor="let amenity of amenities" [value]="amenity">{{amenity}}</mat-option>
+      </mat-select>
     </mat-form-field>
+
 
     <div class="bottomBottons">
       <button class="btn btn-success" style="margin-right: 10px;">Apply</button>

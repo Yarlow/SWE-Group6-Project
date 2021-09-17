@@ -10,6 +10,8 @@ import { HotelService } from 'src/app/service/hotel.service';
 })
 export class FilterComponent implements OnInit {
   form: FormGroup;
+  showWeekdaySlider: boolean = false;
+  showWeekendSlider: boolean = false;
 
   value: number = 100;
   options: Options = {
@@ -25,20 +27,22 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup({
       'hotelName': new FormControl(),
-      'valueSlider' : new FormControl([0, 200])
+      'weekdayPrice' : new FormControl([0, 200]),
+      'weekendPrice' : new FormControl([0,200]),
+      'selectedAmenities' :new FormControl()
     })
   }
 
   onSearch(){
-    console.log(this.form.value.valueSlider[0])
-    console.log(this.form.value.valueSlider[1])
+    console.log(this.form.value.weekdayPrice[0])
+    console.log(this.form.value.weekdayPrice[1])
     console.log(this.form)
   }
 
   onFilter() {
     let userFilter = {
       nameFilter: this.form.value.hotelName,
-      priceFilter: [this.form.value.valueSlider[0], this.form.value.valueSlider[1]]
+      priceFilter: [this.form.value.weekdayPrice[0], this.form.value.weekdayPrice[1]]
     }
 
     this.hotelService.filterHotels(userFilter)

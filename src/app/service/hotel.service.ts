@@ -41,7 +41,7 @@ export class HotelService {
       roomsAvailable: 8,
       pricePerNightWeekend: 3,
       pricePerNightWeekday: 0,
-      amenities: ["breakfast"]
+      amenities: ["breakfast", 'A 15 inch dildo in the nightstand']
     },
     {
       name: "More tests",

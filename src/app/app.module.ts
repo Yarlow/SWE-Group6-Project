@@ -8,6 +8,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './user/login/login.component';
+import { RegisterComponent } from './user/register/register.component';
+import { AccountInfoComponent } from './user/account-info/account-info.component';
 
 import { NewbookComponent } from './booking/newbook/newbook.component';
 import { ManagebookComponent } from './booking/managebook/managebook.component';
@@ -23,7 +26,8 @@ import { MatInputModule } from '@angular/material/input'
 import { MatButtonModule } from '@angular/material/button'
 import { NgxSliderModule } from '@angular-slider/ngx-slider'
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import { MatSelectModule } from '@angular/material/select'
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon'
 
 @NgModule({
   declarations: [
@@ -36,6 +40,9 @@ import { MatSelectModule } from '@angular/material/select'
     HotelListItemComponent,
     HotelsComponent,
     FilterComponent,
+    LoginComponent,
+    RegisterComponent,
+    AccountInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +54,8 @@ import { MatSelectModule } from '@angular/material/select'
     MatButtonModule,
     NgxSliderModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatIconModule
 
   ],
   providers: [],

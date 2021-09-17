@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
 
+  signedIn :boolean;
   constructor() { }
 
   ngOnInit(): void {
+    this.signedIn = false;
   }
 
 }

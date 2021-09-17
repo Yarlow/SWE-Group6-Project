@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewbookComponent implements OnInit {
 
+  showFilter: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {

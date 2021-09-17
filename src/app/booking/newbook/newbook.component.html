@@ -19,8 +19,15 @@
 
   </div>
   <div class="col-md-2">
-    <app-filter></app-filter>
+    <button mat-mini-fab color="accent" (click)="showFilter = !showFilter">
+      <!-- <mat-icon>filter_list</mat-icon> -->
+      <mat-icon>search</mat-icon>
 
+    </button>
+    <app-filter *ngIf="showFilter"></app-filter>
+
+  </div>
+  <div >
   </div>
 
 
