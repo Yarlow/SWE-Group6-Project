@@ -4,6 +4,7 @@ export interface Hotel {
   pricePerNightWeekend: number,
   pricePerNightWeekday: number,
   roomsAvailable: number,
-  amenities: string[]
+  amenities: string[],
+  imagePath: string
 
 }

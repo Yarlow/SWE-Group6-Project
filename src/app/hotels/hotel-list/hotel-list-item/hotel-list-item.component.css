@@ -1,0 +1,56 @@
+.imageWrapper img {
+  height: 200px;
+
+  width: 100%;
+  /* object-fit: contain; */
+  object-fit: cover;
+
+  /* height: min-content; */
+  /* object-fit: fill; */
+}
+
+.imageWrapper {
+  overflow: hidden;
+  /* max-width: 50%; */
+  height: 100%;
+  width: 50%;
+  /* flex-grow: 3; */
+}
+
+mat-card {
+  padding: 0px;
+  /* height: min-content; */
+  max-height: 200px;
+}
+
+mat-card:hover {
+  background-color: #e0e0e0;
+}
+
+.imageAndInfoWrapper {
+  display: flex;
+  flex-direction: row;
+  height: min-content;
+  /* object-fit: contain; */
+  height: 100%;
+  width: 100%;
+  flex-grow: 3;
+
+
+}
+
+.infoWrapper {
+  margin-left: 20px;
+  height: min-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.amenityList span:not(:first-child)::before {
+  content: "|"
+}
+
+.infoWrapper p {
+  font-size: 20px;
+}

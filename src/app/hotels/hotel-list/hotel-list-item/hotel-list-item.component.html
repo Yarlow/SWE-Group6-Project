@@ -1,24 +1,39 @@
 <div style="margin-bottom: 10px; width:80%;">
   <mat-card>
-    <div>
-      <h2>
-        {{hotelElement.name}}
-      </h2>
-      <p>
-        Location: {{hotelElement.location}}
-      </p>
-      <p>
-        Price (weekday): ${{hotelElement.pricePerNightWeekday}}
-      </p>
-      <p>
-        Price (weekend): ${{hotelElement.pricePerNightWeekend}}
-      </p>
-      <p>
-        Amenities:
-        <span *ngFor="let amenity of hotelElement.amenities">
-          {{amenity}}
-        </span>
-      </p>
+    <div class="imageAndInfoWrapper">
+      <div class="imageWrapper">
+        <img src="{{hotelElement.imagePath}}" alt="">
+      </div>
+      <div class="infoWrapper">
+        <h2 style="white-space: nowrap">
+          {{hotelElement.name}}
+        </h2>
+        <p>
+          Location: {{hotelElement.location}}
+        </p>
+        <div class="row">
+          <div class="col">
+            <p>
+              Price (weekday): ${{hotelElement.pricePerNightWeekday}}
+            </p>
+
+          </div>
+          <div class="col">
+            <p>
+              Price (weekend): ${{hotelElement.pricePerNightWeekend}}
+            </p>
+
+          </div>
+
+        </div>
+        <p class="amenityList">
+          Amenities:
+          <span *ngFor="let amenity of hotelElement.amenities">
+            {{amenity}}
+          </span>
+        </p>
+      </div>
+
     </div>
 
   </mat-card>
