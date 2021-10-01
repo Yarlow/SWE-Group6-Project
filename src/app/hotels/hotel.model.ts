@@ -1,10 +1,13 @@
 export interface Hotel {
+  _id: string,
   name: string,
-  location: string,
-  pricePerNightWeekend: number,
-  pricePerNightWeekday: number,
-  roomsAvailable: number,
+  rooms: number,
+  price: {
+    standard: number,
+    queen: number,
+    king: number,
+    weekendSurcharge: number
+  },
   amenities: string[],
-  imagePath: string
-
+  // imagePath: string
 }
