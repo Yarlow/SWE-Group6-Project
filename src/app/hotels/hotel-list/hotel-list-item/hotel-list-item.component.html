@@ -2,7 +2,7 @@
   <mat-card>
     <div class="imageAndInfoWrapper">
       <div class="imageWrapper">
-        <img src="{{hotelElement.imagePath}}" alt="">
+        <img src="assets/bellagio.jpg" alt="">
       </div>
       <div class="infoWrapper">
         <!-- <div class="row" > -->
@@ -12,9 +12,9 @@
             </h2>
           <!-- </div> -->
           <!-- <div class="col" style="white-space: nowrap"> -->
-            <p>
+            <!-- <p>
               Location: {{hotelElement.location}}
-            </p>
+            </p> -->
 
           <!-- </div> -->
 
@@ -22,13 +22,13 @@
         <div class="row">
           <div class="col">
             <p>
-              Price (weekday): ${{hotelElement.pricePerNightWeekday}}
+              Price (standard): ${{hotelElement.price.standard}}
             </p>
 
           </div>
           <div class="col">
             <p>
-              Price (weekend): ${{hotelElement.pricePerNightWeekend}}
+              Price (queen): ${{hotelElement.price.queen}}
             </p>
 
           </div>
