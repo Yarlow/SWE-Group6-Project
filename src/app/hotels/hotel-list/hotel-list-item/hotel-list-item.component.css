@@ -4,6 +4,7 @@
   width: 100%;
   /* object-fit: contain; */
   object-fit: cover;
+  margin-top: auto;
 
   /* height: min-content; */
   /* object-fit: fill; */
@@ -14,13 +15,15 @@
   /* max-width: 50%; */
   height: 100%;
   width: 50%;
+  margin-top: auto;
+  margin-bottom: auto;
   /* flex-grow: 3; */
 }
 
 mat-card {
   padding: 0px;
-  /* height: min-content; */
-  max-height: 200px;
+  height: min-content;
+  /* max-height: 200px; */
 }
 
 mat-card:hover {

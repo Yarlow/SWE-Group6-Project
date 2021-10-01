@@ -1,6 +1,20 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 
+const hotelsRoutes = require("./routes/hotels")
 const app = express()
+
+mongoose.connect("mongodb+srv://JShawver:sJBMVTGfqjaEBzGT@cluster0.kfyl3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() =>{
+    console.log('connected to database!')
+  })
+  .catch(() => {
+    console.log('connection failed!')
+  })
+
+mongoose.connect()
+
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*")
@@ -9,4 +23,9 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use("/api/hotels", hotelsRoutes)
+
+
+
 module.exports = app
+// sJBMVTGfqjaEBzGT

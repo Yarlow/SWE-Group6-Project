@@ -42,6 +42,15 @@ export class HotelService {
       amenities: ["breakfast", "gym", "spa"],
       imagePath: "assets/Boardwalk.jpg"
 
+    },{
+      name: "SPACE HOTEL",
+      location: "FUCKING SPACE",
+      roomsAvailable: 2,
+      pricePerNightWeekend: 90000,
+      pricePerNightWeekday: 9000000000,
+      amenities: ["Breakfast", "Gym", "A fucking rotating piece of metal in space"],
+      imagePath: "assets/spacehotel.jpg"
+
     }, {
       name: "More tests",
       location: "Yo momma",
@@ -50,7 +59,6 @@ export class HotelService {
       pricePerNightWeekday: 0,
       amenities: ["breakfast", 'A 15 inch dildo in the nightstand'],
       imagePath: "assets/tentdog.jpg"
-
     },
     {
       name: "More tests",
@@ -61,7 +69,7 @@ export class HotelService {
       amenities: ["babooshka"],
       imagePath: "assets/Boardwalk.jpg"
 
-    }, {
+    },  {
       name: "More tests",
       location: "TEST",
       roomsAvailable: 8,
@@ -69,7 +77,6 @@ export class HotelService {
       pricePerNightWeekday: 4510,
       amenities: ["breakfast"],
       imagePath: "assets/Boardwalk.jpg"
-
     }
   ]
 
