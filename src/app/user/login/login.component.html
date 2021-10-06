@@ -1,16 +1,23 @@
-<form (submit)="onLogin()" [formGroup]="loginForm">
-  <mat-form-field>
-    <input type="text"
-    matInput
-    formControlName="username"
-    placeholder="username">
-  </mat-form-field>
+<mat-card class="loginForm">
+  <form (submit)="onLogin()" [formGroup]="loginForm">
+    <mat-form-field>
+      <input type="text"
+      matInput
+      formControlName="username"
+      placeholder="username">
+    </mat-form-field>
 
-  <mat-form-field>
+    <mat-form-field>
+      <input type="password"
+      matInput
+      formControlName="password"
+      placeholder="password" />
+      <mat-error *ngIf="loginAttemptMessage">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <div class="bottom">
+      <button mat-raised-button type="submit" color="primary">Login</button>
+      <p>Don't have an account? <a routerLink="/register">Sign Up</a></p>
 
-  </mat-form-field>
-
-<div><img src="-" alt=""><img src="" alt=""></div>
-
-
-</form>
+    </div>
+  </form>
+</mat-card>
