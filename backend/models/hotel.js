@@ -19,10 +19,10 @@ const hotelSchema = mongoose.Schema({
     type: [String],
     required: true
   },
-  reservations: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Reservation'
-  }
+  // reservations: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Reservation'
+  // }
   // availability: {
   //   date: {
   //     type: Date,

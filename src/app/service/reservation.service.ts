@@ -9,8 +9,8 @@ export class ReservationService {
   constructor(private http: HttpClient) { }
 
   bookReservation(reservation) {
-    this.http.post('localhost:3000/api/reservation', reservation).subscribe(res => {
-      
+    this.http.post<{ message: string }>('http://localhost:3000/api/reservations', reservation).subscribe(res => {
+      console.log(res.message)
     })
   }
 
