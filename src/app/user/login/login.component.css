@@ -1,0 +1,16 @@
+.loginForm {
+  width: 25%;
+  margin: auto;
+  min-width: 500px;
+  
+}
+.loginForm mat-form-field {
+  width: 100%;
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  flex-direction: column;
+}

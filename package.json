@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "~11.2.6",
     "@angular/router": "~11.2.6",
     "bootstrap": "^5.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.8",
     "nodemon": "^2.0.12",
     "rxjs": "~6.6.0",

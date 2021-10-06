@@ -1,1 +1,21 @@
-<p>register works!</p>
+<mat-card class="registerForm">
+  <form (submit)="onSingup()" [formGroup]="signupForm">
+    <mat-form-field>
+      <input type="text"
+      matInput
+      formControlName="username"
+      placeholder="username">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="password"
+      matInput
+      formControlName="password"
+      placeholder="password" />
+    </mat-form-field>
+    <div class="bottom">
+      <button mat-raised-button type="submit" color="accent">Sign Up</button>
+      <p style="float: right">Already have an account? <a routerLink="/login">Login</a></p>
+    </div>
+  </form>
+</mat-card>
