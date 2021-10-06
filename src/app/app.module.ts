@@ -19,7 +19,9 @@ import { HotelListItemComponent } from './hotels/hotel-list/hotel-list-item/hote
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HotelsComponent } from './hotels/hotels.component';
 import { FilterComponent } from './booking/newbook/filter/filter.component';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatNativeDateModule } from '@angular/material/core';
 // import { MatCardModule } from '@angular/material/card'
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input'
@@ -27,7 +29,8 @@ import { MatButtonModule } from '@angular/material/button'
 import { NgxSliderModule } from '@angular-slider/ngx-slider'
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon';
+import { BookingpopupComponent } from './booking/newbook/bookingpopup/bookingpopup.component'
 
 @NgModule({
   declarations: [
@@ -43,6 +46,7 @@ import { MatIconModule } from '@angular/material/icon'
     LoginComponent,
     RegisterComponent,
     AccountInfoComponent,
+    BookingpopupComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,7 +60,10 @@ import { MatIconModule } from '@angular/material/icon'
     MatSelectModule,
     MatCheckboxModule,
     MatIconModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
 
   ],
   providers: [],

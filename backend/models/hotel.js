@@ -18,7 +18,22 @@ const hotelSchema = mongoose.Schema({
   amenities: {
     type: [String],
     required: true
-  }
+  },
+  // reservations: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Reservation'
+  // }
+  // availability: {
+  //   date: {
+  //     type: Date,
+  //     required: true
+  //   },
+  //   booked: {
+  //     type: Boolean,
+  //     required: true,
+  //     default: false
+  //   }
+  // }
 })
 
 module.exports = mongoose.model('Hotel', hotelSchema)

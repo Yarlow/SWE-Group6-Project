@@ -14,12 +14,11 @@ router.get('', (req, res, next) => {
 
 router.get('/new', (req, res, next) => {
   const hotel = new Hotel({
-    name: 'No amenities Test Hotel',
+    name: 'No King Price Test',
     rooms: 20,
     price: {
       standard: 100,
       queen: 200,
-      king: 300,
       weekendSurcharge: 0.15
     }
   })

@@ -53,7 +53,7 @@ router.post('/login', (req, res, next) => {
       const token = jwt.sign(
         {username: foundUser.username, userId: foundUser._id},
         'secret_passphrase',
-        { expiresIn: "1h" })
+        { expiresIn: "6h" })
 
       console.log("Login success")
       // res.status(200).json({
@@ -63,11 +63,12 @@ router.post('/login', (req, res, next) => {
 
       return res.status(200).json({
         message: "Success",
-        token: token
+        token: token,
+        expiresIn: 6*3600 // 6 hours in seconds
       })
     } else {
       return res.status(401).json( {
-        message: "Not Found"
+        message: "Username/password not found"
       })
     }
 

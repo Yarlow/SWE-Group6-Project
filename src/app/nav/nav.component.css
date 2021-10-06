@@ -6,4 +6,5 @@
   min-height: 100%;
   margin: 10px 30px;
   /* background-color: grey;  NOW IN ../../style.css */
+  position: relative;
 }

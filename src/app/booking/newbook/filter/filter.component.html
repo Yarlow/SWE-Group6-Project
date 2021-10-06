@@ -1,5 +1,9 @@
+<button mat-mini-fab color="accent" (click)="showFilter = !showFilter" style="position: sticky; top: 0%; right: 0%;">
+  <!-- <mat-icon>filter_list</mat-icon> -->
+  <mat-icon>search</mat-icon>
 
-<mat-card class="filterForm">
+</button>
+<mat-card class="filterForm" *ngIf="showFilter">
   <h3>Filter (need backend, kinda works tho)</h3>
   <form (submit)="onFilter()" [formGroup]="form">
     <mat-form-field  style="width: 100%">
