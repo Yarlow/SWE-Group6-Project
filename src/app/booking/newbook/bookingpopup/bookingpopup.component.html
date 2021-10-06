@@ -1,0 +1,21 @@
+<h3>Book a Room With {{selectedHotel.name}}</h3>
+<form (submit)="onConfirmBook()" [formGroup]="bookingForm">
+  <mat-form-field appearance="fill">
+    <mat-label>Enter a reservation range</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate placeholder="Start date" formControlName="startDate">
+      <input matEndDate placeholder="End date" formControlName="endDate">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Bed Choice</mat-label>
+    <mat-select formControlName="selectedPrice" >
+      <mat-option *ngFor="let price of selectedHotel.price | keyvalue" [value]="[price.key, price.value]">{{price.key}}: ${{price.value}}/night</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Confirm</button>
+</form>

@@ -9,6 +9,7 @@ import { HotelService } from 'src/app/service/hotel.service';
   styleUrls: ['./filter.component.css', './filter.component.scss']
 })
 export class FilterComponent implements OnInit {
+  showFilter: boolean = false;
   form: FormGroup;
   showWeekdaySlider: boolean = false;
   showWeekendSlider: boolean = false;

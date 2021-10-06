@@ -13,22 +13,24 @@
 </div> -->
 
 
-<div class="row">
+<!-- <div class="row">
   <div class="col-md-8 hotelList" style="margin-left: 0;">
     <app-hotel-list></app-hotel-list>
 
   </div>
-  <div class="col-md-3" style="padding-top: 25px; positon: stick; top: 0">
-    <button mat-mini-fab color="accent" (click)="showFilter = !showFilter">
-      <!-- <mat-icon>filter_list</mat-icon> -->
-      <mat-icon>search</mat-icon>
+  <div class="col-md-4" style="padding-top: 25px; positon: stick; top: 0; width: min-content;">
 
-    </button>
-    <app-filter *ngIf="showFilter"></app-filter>
+
+
+    <app-filter ></app-filter>
 
   </div>
-  <div >
-  </div>
 
+
+</div> -->
+<div style="width: 100%; display:flex; flex-direction: row;" >
+  <app-hotel-list style="flex-grow: 1;"></app-hotel-list>
+
+  <app-filter style="width: min-content; position: sticky; right: 0; top: 5%; height: min-content;" ></app-filter>
 
 </div>
