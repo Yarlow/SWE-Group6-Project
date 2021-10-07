@@ -60,9 +60,11 @@ router.post('/login', (req, res, next) => {
       //   message: "Login Success",
       //   user: foundUser._id
       // })
+      console.log("User Id " + foundUser._id)
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Success",
+        userId: foundUser._id,
         token: token,
         expiresIn: 6*3600 // 6 hours in seconds
       })
@@ -73,10 +75,34 @@ router.post('/login', (req, res, next) => {
     }
 
   }).catch( err => {
+    console.log("but error??????")
+    console.log(err)
     res.status(500).json({
       message: "Error",
       error: err
     })
+  })
+})
+
+router.get('/:id', (req,res,next) => {
+  console.log(req.params.id)
+  User.findById(req.params.id).then(user => {
+    if (user){
+      console.log(user)
+      user.populate('reservations')
+      user.populate('managerOf')
+      res.status(200).json({
+        user: {
+          _id: user._id,
+          username: user.username,
+          reservations: user.reservations,
+          managerOf: user.managerOf
+
+        }
+      })
+    } else {
+      res.status(404).json({message: 'User Not Found'})
+    }
   })
 })
 

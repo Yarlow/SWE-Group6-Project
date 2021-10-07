@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { UserService } from 'src/app/service/user.service';
+import { User } from '../user.model';
 
 @Component({
   selector: 'app-account-info',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccountInfoComponent implements OnInit {
 
-  constructor() { }
+  user: User
+  userSubscription: Subscription
+
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
+    this.userService.getSignedInUser()
+
+    this.userSubscription = this.userService.getUserUpdateListener().subscribe((newUser: User) => {
+      this.user = newUser
+      console.log(this.user.reservations)
+    })
   }
 
 }

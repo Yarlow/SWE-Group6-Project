@@ -15,8 +15,17 @@ router.post('', (req, res, next) => {
   })
 
   reservation.save().then(createdRes => {
+    let user = User.findById(req.body.user).then(user => {
+      console.log(user)
+      user.reservations.push(createdRes._id)
+      user.save().then(updatedUser => {
+        console.log(updatedUser)
+      })
+    })
+
     createdRes.populate('hotel').then(populatedRes => {
-      console.log(populatedRes.hotel.name)
+      // console.log(populatedRes.hotel.name)
+      // console.log(populatedRes)
       res.status(201).json({
         message: 'Was it made right?'
       })
