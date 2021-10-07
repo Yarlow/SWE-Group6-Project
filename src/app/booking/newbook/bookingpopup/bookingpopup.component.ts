@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/hotels/hotel-list/hotel-list-item/hotel-list-item.component';
 import { Hotel } from 'src/app/hotels/hotel.model';
+import { UserService } from 'src/app/service/user.service';
 import { ReservationService } from '../../../service/reservation.service'
 
 @Component({
@@ -20,7 +21,8 @@ export class BookingpopupComponent implements OnInit {
   constructor(
     public dialogref: MatDialogRef<BookingpopupComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -61,7 +63,7 @@ export class BookingpopupComponent implements OnInit {
 
     let reservation = {
       hotel: this.selectedHotel._id,
-      user: '61572ceb634b48ec14db8953', //fix this
+      user: localStorage.getItem('userID'), //fix this
       startDate: startDate,
       endDate: endDate,
       price: resPrice
