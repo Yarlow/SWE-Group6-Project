@@ -1,6 +1,13 @@
 <div class="wrapper">
   <mat-card>
     <h1>Hi {{ user.username }}</h1>
+    <div *ngFor="let reservation of user.reservations">
+      <h2>{{reservation.hotel.name}}</h2>
+      <h2>{{reservation.startDate}}</h2>
+      <h2>{{reservationendDate}}</h2>
+      <h2>${{reservation.price}}</h2>
 
+
+    </div>
   </mat-card>
 </div>
