@@ -9,8 +9,9 @@ router.get('', (req, res, next) => {
       message: "Got Hotels",
       hotels: documents
     })
+    console.log("hotels have been fetched")
   })
-})
+} )
 
 router.get('/search', (req, res, next) => {
   // console.log(req.query)
