@@ -1,7 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-
 const hotelsRoutes = require("./routes/hotels")
 const reservationsRoutes = require("./routes/reservations")
 const usersRoutes = require("./routes/users")
