@@ -1,5 +1,6 @@
 const express = require("express")
 const User = require("../models/user")
+const Reservation = require("../models/reservation")
 const jwt = require("jsonwebtoken")
 const router = express.Router()
 
@@ -87,20 +88,44 @@ router.post('/login', (req, res, next) => {
 router.get('/:id', (req,res,next) => {
   console.log(req.params.id)
   User.findById(req.params.id).then(user => {
-    if (user){
-      console.log(user)
-      user.populate('reservations')
-      user.populate('managerOf')
-      res.status(200).json({
-        user: {
-          _id: user._id,
-          username: user.username,
-          reservations: user.reservations,
-          managerOf: user.managerOf
-
+    if (user) {
+      Reservation.find({user: user._id}).populate('hotel').then(reservations => {
+        // console.log("Reservationss" + reservations)
+        // console.log("USER " + user)
+        // console.log(reservations)
+        for(reservation of reservations){
+          console.log(reservation)
+          // reservation.populate('hotel').then(popres =>{
+          //   console.log(popres)
+          // })
         }
+        res.status(200).json({
+          user: {
+            _id: user._id,
+            username: user.username,
+            reservations: reservations,
+            managerOf: user.managerOf
+
+          }
+        })
       })
-    } else {
+
+    }
+    // if (user){
+    //   console.log(user)
+    //   user.populate('reservations')
+    //   user.populate('managerOf')
+    //   res.status(200).json({
+    //     user: {
+    //       _id: user._id,
+    //       username: user.username,
+    //       reservations: user.reservations,
+    //       managerOf: user.managerOf
+    //
+    //     }
+    //   })
+    // }
+    else {
       res.status(404).json({message: 'User Not Found'})
     }
   })
