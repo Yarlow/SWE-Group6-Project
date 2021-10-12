@@ -9,8 +9,9 @@ router.get('', (req, res, next) => {
       message: "Got Hotels",
       hotels: documents
     })
+    console.log("hotels have been fetched")
   })
-})
+} )
 
 router.get('/new', (req, res, next) => {
   const hotel = new Hotel({
