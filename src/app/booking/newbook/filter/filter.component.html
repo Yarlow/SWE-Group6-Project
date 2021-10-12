@@ -4,7 +4,7 @@
 
 </button>
 <mat-card class="filterForm" *ngIf="showFilter">
-  <h3>Filter (need backend, kinda works tho)</h3>
+  <h3>Filter</h3>
   <form (submit)="onFilter()" [formGroup]="form">
     <mat-form-field  style="width: 100%">
       <input type="text"
@@ -13,16 +13,27 @@
         placeholder="Hotel Name">
     </mat-form-field>
 
+    <mat-form-field>
+      <mat-label>Bed Choice</mat-label>
+      <mat-select formControlName="selectedBed">
+        <mat-option *ngFor="let bedOption of bedOptions" [value]="bedOption">{{bedOption}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <!-- <p style="">Weekday Price Per Night</p> -->
-    <div>
+    <!-- <div>
       <button mat-raised-button (click)="showWeekdaySlider = !showWeekdaySlider" color="accent">Weekday Price</button>
-      <ngx-slider *ngIf="showWeekdaySlider" [options]="options" formControlName="weekdayPrice"></ngx-slider>
-    </div>
+      <ngx-slider *ngIf="showWeekdaySlider" [options]="priceSliderOptions" formControlName="weekdayPrice"></ngx-slider>
+    </div> -->
 
     <!-- <p style="">Weeknight Price Per Night</p> -->
     <div style="margin-top: 10px;">
-      <button mat-raised-button (click)="showWeekendSlider = !showWeekendSlider" color="accent">Weekend Price</button>
-      <ngx-slider *ngIf="showWeekendSlider" [options]="options" formControlName="weekendPrice"></ngx-slider>
+      <button mat-raised-button (click)="showWeekendSlider = !showWeekendSlider" color="accent" type="button">Price Filter</button>
+      <div class="pricingFilter" *ngIf="showWeekendSlider">
+        <mat-checkbox color="primary" formControlName="weekendPricingCheckbox">Weekend Pricing</mat-checkbox>
+        <ngx-slider [options]="priceSliderOptions" formControlName="weekendPrice"></ngx-slider>
+
+      </div>
 
     </div>
 
@@ -44,8 +55,8 @@
 
 
     <div class="bottomBottons">
-      <button class="btn btn-success" style="margin-right: 10px;">Apply</button>
-      <button class="btn btn-warning">Clear</button>
+      <button class="btn btn-success" style="margin-right: 10px;" type="submit">Apply</button>
+      <button class="btn btn-warning" type="button" (click)="onClearForm()">Clear</button>
     </div>
 
   </form>

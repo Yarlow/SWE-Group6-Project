@@ -10,10 +10,10 @@ const userSchema = mongoose.Schema({
     type: String,
     require: true
   },
-  reservations: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Reservation'
-  }],
+  // reservations: [{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Reservation'
+  // }],
   managerOf: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Hotel'

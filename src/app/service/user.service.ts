@@ -19,7 +19,6 @@ export class UserService {
   constructor(private http: HttpClient, private router: Router) { }
 
   getUser(): User {
-    console.log("IN GET USER THING " + this.user)
     return this.user;
   }
 
@@ -31,7 +30,7 @@ export class UserService {
     this.userId = id
   }
 
-  signUp(user: {username: string, password: string}) {
+  signUp(user: {username: string, password: string, hotelKey: string}) {
     this.http.post<{ message: string }>("http://localhost:3000/api/users", user)
       .subscribe(responseData => {
         console.log(responseData.message);
@@ -40,7 +39,7 @@ export class UserService {
 
   login(user: { username: string, password: string }){
     let responseMessageToReturn: string = ""
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       this.http.post<{ message: string, token: string, expiresIn: number, userId: string }>("http://localhost:3000/api/users/login", user)
         .subscribe(responseData => {
           const token = responseData.token;
@@ -53,15 +52,17 @@ export class UserService {
             this.authStatusListener.next(true);
             const now = new Date()
             const expirationDate = new Date( now.getTime() + expiresInDuration * 1000)
-            console.log(expirationDate)
             this.saveAuthData(token, expirationDate, responseData.userId)
             this.isAuthenticated = true;
             this.setUserId(responseData.userId)
+            this.getSignedInUserInfo()
             // this.getuserInfo()
             // this.setUser(this.getUserInfo(responseData.userId))
             this.router.navigate(['/']);
           }
           resolve(responseData.message);
+        }, (errorResponse) => {
+          reject(errorResponse.error.message)
         })
     })
 
@@ -78,7 +79,6 @@ export class UserService {
   }
 
   setAuthTimer(duration: number) {
-    console.log("Setting timer: " + duration)
     this.tokenTimer = setTimeout(() => {
       this.logout();
     }, duration * 1000) // duration needs to be in milliseconds
@@ -90,13 +90,13 @@ export class UserService {
     if (authInfo){
         const now = new Date();
         const expiresIn = authInfo.expirationDate.getTime() - now.getTime();
-        console.log("expires in " + expiresIn)
         if (expiresIn > 0){
           this.userId = authInfo.userId
           this.token = authInfo.token;
           this.isAuthenticated = true
           this.setAuthTimer(expiresIn / 1000) //subtracting the two times returns a milisecond
           this.authStatusListener.next(true)
+          this.getSignedInUserInfo()
         }
     } else {
       return
@@ -108,10 +108,8 @@ export class UserService {
   }
 
 
-  getSignedInUser() {
-    // console.log("USER ID ID IDIDIIDID" + userId)
+  getSignedInUserInfo() {
     this.http.get<{user: User}>('http://localhost:3000/api/users/' + this.userId).subscribe(responseData => {
-      console.log("RETURNING" + responseData.user)
       this.user = {
         _id: responseData.user._id,
         username: responseData.user.username,
@@ -119,7 +117,6 @@ export class UserService {
         managerOf: responseData.user.managerOf
       }
       this.userUpdated.next(this.user)
-      console.log("hi" + this.user)
       // return {
       //   username: responseData.user.username,
       //   reservations: responseData.user.reservations,
@@ -129,7 +126,7 @@ export class UserService {
       console.log("ERROR")
       // return null
     })
-    console.log("DEFAULT???????????")
+    // console.log("DEFAULT???????????")
 
 
   }

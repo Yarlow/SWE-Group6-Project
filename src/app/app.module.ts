@@ -22,6 +22,7 @@ import { FilterComponent } from './booking/newbook/filter/filter.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar'
 // import { MatCardModule } from '@angular/material/card'
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input'
@@ -30,7 +31,9 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider'
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { BookingpopupComponent } from './booking/newbook/bookingpopup/bookingpopup.component'
+import { BookingpopupComponent } from './booking/newbook/bookingpopup/bookingpopup.component';
+import { ManagebooklistComponent } from './booking/managebook/managebooklist/managebooklist.component';
+import { ManagebooklistItemComponent } from './booking/managebook/managebooklist/managebooklist-item/managebooklist-item.component'
 
 @NgModule({
   declarations: [
@@ -47,6 +50,8 @@ import { BookingpopupComponent } from './booking/newbook/bookingpopup/bookingpop
     RegisterComponent,
     AccountInfoComponent,
     BookingpopupComponent,
+    ManagebooklistComponent,
+    ManagebooklistItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,7 +68,8 @@ import { BookingpopupComponent } from './booking/newbook/bookingpopup/bookingpop
     HttpClientModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSnackBarModule
 
   ],
   providers: [],
