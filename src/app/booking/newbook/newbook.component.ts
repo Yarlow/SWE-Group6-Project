@@ -12,6 +12,7 @@ export class NewbookComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log("init")
   }
 
 }

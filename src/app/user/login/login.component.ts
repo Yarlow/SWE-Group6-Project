@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/service/user.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
   loginAttemptMessage = ""
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -31,6 +32,9 @@ export class LoginComponent implements OnInit {
 
       this.loginAttemptMessage = ""+responseMessage
       console.log(this.loginAttemptMessage)
+    }).catch(error => {
+      console.log(error)
+      this.snackBar.open(error, "X")
     })
   }
 

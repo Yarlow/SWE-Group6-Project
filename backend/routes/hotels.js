@@ -13,23 +13,53 @@ router.get('', (req, res, next) => {
   })
 } )
 
-router.get('/new', (req, res, next) => {
-  const hotel = new Hotel({
-    name: 'No King Price Test',
-    rooms: 20,
-    price: {
-      standard: 100,
-      queen: 200,
-      weekendSurcharge: 0.15
+router.get('/search', (req, res, next) => {
+  // console.log(req.query)
+  let query = {}
+  if (req.query.hotelName){
+    console.log("Hotel name query given")
+    query = {...query, name: req.query.hotelName}
+  }
+  if (req.query.amenities){
+    query = {...query, amenities: { $all :req.query.amenities}}
+    // console.log(query)
+  }
+  if (req.query.minPrice || req.query.maxPrice) {
+    if (req.query.bedChoice === "all"){
+        query = {...query, price: {$or: [
+          { '$and': [{king: {$lte: req.query.maxPrice}}, {king: {$gte: req.query.minPrice}}] },
+          {
+            '$and': [{queen: {$lte: req.query.maxPrice}}, {queen: {$gte: req.query.minPrice}}]
+          }, {
+            '$and': [{standard: {$lte: req.query.maxPrice}}, {standard: {$gte: req.query.minPrice}}]
+          }]}}
+    } else if (req.query.bedChoice ==="king"){
+      // query = {...query, price: {
+      //   '$and': [{king: {$lte: req.query.maxPrice}}, {king: {$gte: req.query.minPrice}}]
+      // }}
+      query = {...query, price:{
+
+      }}
+    } else if (req.query.bedChoice ==="queen"){
+      query = {...query, price: {
+        '$and': [{queen: {$lte: req.query.maxPrice}}, {queen: {$gte: req.query.minPrice}}]
+      }}
+    } else {
+      query = {...query, price: {
+        '$and': [{standard: {$lte: req.query.maxPrice}}, {standard: {$gte: req.query.minPrice}}]
+      }}
     }
+  }
+  console.log(query)
+
+  Hotel.find({query}).then(foundHotels => {
+    console.log(foundHotels)
   })
 
-  hotel.save().then(createdHotel => {
-    res.status(201).json({
-      message: "Made hotel",
-      hotelId: createdHotel._id
-    })
-  })
+
+
+  res.status(200).json({message:"stfu"})
 
 })
+
 module.exports = router

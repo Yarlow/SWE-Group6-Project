@@ -1,6 +1,7 @@
 const express = require("express")
 const User = require("../models/user")
 const Reservation = require("../models/reservation")
+const Hotel = require("../models/hotel")
 const jwt = require("jsonwebtoken")
 const router = express.Router()
 
@@ -22,6 +23,20 @@ router.get('/new', (req, res, next) => {
 })
 
 router.post('', (req, res, next) => {
+  if (req.body.hotelKey){
+    let hotel = null
+    console.log("Hotel Key Attempt")
+    Hotel.find({managerPassword: req.body.hotelKey}).then(foundHotel => {
+      if (!foundHotel){
+        return res.status(404).json({
+          message: "Hotel Not Found"
+        })
+      }
+      hotel = foundHotel
+      console.log(foundHotel)
+    })
+
+  }
   console.log(req.body)
   const user = new User({
     username: req.body.username,

@@ -16,11 +16,12 @@ export class AccountInfoComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.userService.getSignedInUser()
+    this.user = this.userService.getUser()
+    // this.userService.getSignedInUserInfo()
 
     this.userSubscription = this.userService.getUserUpdateListener().subscribe((newUser: User) => {
       this.user = newUser
-      console.log(this.user.reservations)
+      // console.log(this.user.reservations)
     })
   }
 

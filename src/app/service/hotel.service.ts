@@ -4,104 +4,12 @@ import { Hotel } from '../hotels/hotel.model';
 
 
 import { map } from 'rxjs/operators'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpParams } from '@angular/common/http'
 
 @Injectable({
   providedIn: 'root'
 })
 export class HotelService {
-  // hotels: Hotel[] = [
-  //   {
-  //     name: "Jacob Hotel",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   }, {
-  //     name: "Alex Hotel",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   }, {
-  //     name: "Stephen Hotel",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   }, {
-  //     name: "Blair Hotel",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   },{
-  //     name: "SPACE HOTEL",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   }, {
-  //     name: "More tests",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   },
-  //   {
-  //     name: "More tests",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   },  {
-  //     name: "More tests",
-  //     rooms: 8,
-  //     price: {
-  //       standard: 100,
-  //       queen: 100,
-  //       king: 200,
-  //       weekendSurcharge: 0.05
-  //     },
-  //     amenities: ["breakfast"],
-  //     imagePath: "assets/Boardwalk.jpg"
-  //   }
-  // ]
 
   private hotels: Hotel[] = [];
 
@@ -150,7 +58,15 @@ export class HotelService {
     return this.hotelsUpdated.asObservable()
   }
 
-  filterHotels(userFilter: {nameFilter:string, priceFilter: number[], }) {
+  filterHotels(userFilter:any) {
+    let params = new HttpParams()
+    console.log(userFilter)
+    params = userFilter
+    console.log("PARAMS " + params)
+    this.http.get<{hotels: Hotel[]}>('http://localhost:3000/api/hotels/search', {params: userFilter})
+      .subscribe(hotels => {
+
+    })
     // this.hotelsForView = this.hotels.filter(function(hotel) {
     //   return hotel.name.toLowerCase().includes(userFilter.nameFilter.toLowerCase()) && hotel.pricePerNightWeekday > userFilter.priceFilter[0] && hotel.pricePerNightWeekday < userFilter.priceFilter[1]
     // })
