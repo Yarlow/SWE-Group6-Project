@@ -127,8 +127,6 @@ export class UserService {
       // return null
     })
     // console.log("DEFAULT???????????")
-
-
   }
 
   getUserUpdateListener() {

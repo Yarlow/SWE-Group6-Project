@@ -1,11 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Reservation } from '../booking/reservation.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService {
+
+  reservations: Reservation[]
+  private reservationsUpdated = new Subject<Reservation[]>()
 
   constructor(private http: HttpClient) { }
 
@@ -16,8 +20,11 @@ export class ReservationService {
   }
 
   getUserReservations(userID: string){
-    this.http.get<{message: string, reservations: Reservation[]}>('http://localhost:3000/api/reservations/user/:id').subscribe(responseData => {
-
+    console.log(userID)
+    this.http.get<{message: string, reservations: Reservation[]}>('http://localhost:3000/api/reservations/user/'+userID).subscribe(responseData => {
+      this.reservations = responseData.reservations
+      console.log(responseData.reservations)
+      this.reservationsUpdated.next([...this.reservations])
     })
   }
 
@@ -25,9 +32,17 @@ export class ReservationService {
 
   }
 
-  deleteHotel() {
-    this.http.delete<{message:string}>('http://localhost:3000/api/reservations').subscribe(responseData => {
-      
+  getPostUpdateListener() {
+    return this.reservationsUpdated.asObservable()
+  }
+
+  deleteReservation(id: string) {
+    this.http.delete<{message:string}>('http://localhost:3000/api/reservations/'+id).subscribe(responseData => {
+      if (responseData.message === "success"){
+        const updatedReservations = this.reservations.filter(reservation => reservation._id !== id)
+        this.reservations = updatedReservations
+        this.reservationsUpdated.next([...this.reservations])
+      }
     })
   }
 
