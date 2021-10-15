@@ -1,3 +1,4 @@
 
-
-<app-managebooklist-item></app-managebooklist-item>
+<app-managebooklist-item *ngFor="let res of reservations"
+[reservationElement] = res
+></app-managebooklist-item>

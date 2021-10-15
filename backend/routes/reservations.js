@@ -17,14 +17,14 @@ router.post('', (req, res, next) => {
 
   //put the created reservation into the DB
   reservation.save().then(createdRes => {
-    let user = User.findById(req.body.user).then(user => {
-      console.log(user)
-      user.reservations.push(createdRes._id)
-      user.save().then(updatedUser => {
-        console.log(updatedUser)
-      })
-    })
-    
+    // let user = User.findById(req.body.user).then(user => {
+    //   console.log(user)
+    //   user.reservations.push(createdRes._id)
+    //   user.save().then(updatedUser => {
+    //     console.log(updatedUser)
+    //   })
+    // })
+
     createdRes.populate('hotel').then(populatedRes => {
       // console.log(populatedRes.hotel.name)
       // console.log(populatedRes)
@@ -43,31 +43,50 @@ router.delete('/:id', (req, res, next) => {
   Reservation.findByIdAndRemove(req.params.id).then(FoundReservation => {
     //see object that got deleted in the console
     console.log(FoundReservation)
-    //configure the response 
+    //configure the response
     res.status(200).json({
-      message: "It worked",
+      message: "success",
       reservation: FoundReservation
     })
 
   })
- 
+
 })
 
 //this method will get all of the reservations for a specific user. The user id is accepted as a parameter via the url
 router.get('/user/:id', (req, res, next) => {
 
-  console.log("finding reservations for user " + req.params.id)
+  // console.log("finding reservations for user " + req.params.id)
 
-  User.findById(req.params.id).then(foundUser => {
+  // User.findById(req.params.id).then(foundUser => {
+  //
+  //   console.log(foundUser.reservations[0])
+  //   console.log(foundUser.reservations[1])
+  //   console.log(foundUser.reservations[2])
+  //
+  //   res.status(200).json({
+  //     message: "success"
+  //   })
+  //
+  // })
 
-    console.log(foundUser.reservations[0])
-    console.log(foundUser.reservations[1])
-    console.log(foundUser.reservations[2])
-
-    res.status(200).json({
-      message: "success"
-    })
-
+  Reservation.find({user: req.params.id}).populate('hotel').then(foundReservations => {
+    // console.log(foundReservations)
+    // let populatedRes = []
+    // for (reservation of foundReservations){
+    //   reservation.populate("hotel").then(populatedReservation => {
+    //     populatedRes.push(populatedReservation)
+    //     console.log(populatedReservation)
+    //   })
+    // }
+    console.log(foundReservations)
+    // foundReservations.populate("hotel").then(populatedReservations => {
+      // console.log(populatedReservations)
+      res.status(200).json({
+        message: "success",
+        reservations: foundReservations
+      })
+    // })
   })
 
 })
@@ -77,7 +96,7 @@ router.patch('', (req, res, next) => {
   Reservation.findById(req.params.id).then(foundReservation => {
     console.log("found reservation with id " + req.body.id)
     //change the reservations end date
-    console.log("this reservation ends " + foundReservation.endDate) 
+    console.log("this reservation ends " + foundReservation.endDate)
     res.status(200).json({
       message: "found reservation",
       id: req.body._id

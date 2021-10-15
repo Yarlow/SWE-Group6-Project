@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { Reservation } from 'src/app/booking/reservation.model';
+import { ReservationService } from 'src/app/service/reservation.service';
 
 @Component({
   selector: 'app-managebooklist-item',
@@ -7,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManagebooklistItemComponent implements OnInit {
 
-  constructor() { }
+  @Input() reservationElement: Reservation
+
+  formatStartDate: string
+  formatEndDate:string
+
+  constructor(private reservationService: ReservationService) { }
 
   ngOnInit(): void {
+    console.log("RES " + this.reservationElement)
+    this.formatStartDate = formatDate(this.reservationElement.startDate,'fullDate', 'en_US')
+    this.formatEndDate = formatDate(this.reservationElement.endDate,'fullDate', 'en_US')
+
+  }
+
+  onDeleteReservation() {
+    this.reservationService.deleteReservation(this.reservationElement._id)
   }
 
 }

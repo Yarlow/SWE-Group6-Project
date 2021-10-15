@@ -20,6 +20,7 @@ export class HotelListItemComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    console.log("HOTEL " + this.hotelElement)
   }
 
   onStartBook() {

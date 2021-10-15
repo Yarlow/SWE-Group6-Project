@@ -101,7 +101,6 @@ router.post('/login', (req, res, next) => {
 })
 
 router.get('/:id', (req,res,next) => {
-  console.log(req.params.id)
   User.findById(req.params.id).then(user => {
     if (user) {
       Reservation.find({user: user._id}).populate('hotel').then(reservations => {
@@ -109,7 +108,7 @@ router.get('/:id', (req,res,next) => {
         // console.log("USER " + user)
         // console.log(reservations)
         for(reservation of reservations){
-          console.log(reservation)
+          // console.log(reservation)
           // reservation.populate('hotel').then(popres =>{
           //   console.log(popres)
           // })

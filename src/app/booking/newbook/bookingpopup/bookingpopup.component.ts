@@ -34,12 +34,13 @@ export class BookingpopupComponent implements OnInit {
       'selectedPrice': new FormControl(),
       'startDate': new FormControl(),
       'endDate': new FormControl()
-
     })
-
   }
 
   onConfirmBook() {
+    console.log("START "+ this.bookingForm.value.startDate)
+    console.log("END "+ this.bookingForm.value.endDate)
+
     console.log(this.bookingForm.value.selectedPrice)
     let bedChoice = this.bookingForm.value.selectedPrice[0];
     let pricePerNight = this.bookingForm.value.selectedPrice[1];
