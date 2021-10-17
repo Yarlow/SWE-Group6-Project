@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/service/user.service';
 
@@ -17,13 +17,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      'username': new FormControl(),
-      'password': new FormControl()
+      'username': new FormControl(null, {validators: [Validators.required]}),
+      'password': new FormControl(null, {validators: [Validators.required]})
     })
   }
 
 
   onLogin() {
+    if (this.loginForm.invalid){
+      return
+    }
     let user = {
       username: this.loginForm.value.username,
       password: this.loginForm.value.password

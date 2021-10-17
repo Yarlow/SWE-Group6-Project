@@ -1,43 +1,44 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark" [@rotatedState]='state'>
+    <button (click)="flip()">Do a flip!</button>
 
-  <div class="container-fluid">
-    <a class="navbar-brand" routerLink="">Hotels</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-md-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Some nav item</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Reservations
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" routerLink="reservations/new">Book a Room</a></li>
-            <li><a class="dropdown-item" routerLink="reservations/manage">Manage Reservations</a></li>
-          </ul>
-        </li>
-      </ul>
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="">Hotels</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Some nav item</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Reservations
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" routerLink="reservations/new">Book a Room</a></li>
+              <li><a class="dropdown-item" routerLink="reservations/manage">Manage Reservations</a></li>
+            </ul>
+          </li>
+        </ul>
 
 
 
-      <button class="btn btn-outline-success" style="margin-right: 10px;" routerLink="/login" *ngIf="!userIsAuthenticated">Login</button>
-      <button class="btn btn-outline-warning" routerLink="/register" *ngIf="!userIsAuthenticated">Sign Up</button>
-      <!-- <button mat-button color=primary>Sign Up</button> -->
-      <button class="btn btn-outline-success" style="margin-right: 10px;" routerLink="/account" *ngIf="userIsAuthenticated">Account</button>
-      <button class="btn btn-outline-warning" *ngIf="userIsAuthenticated" (click)="onLogout()">Logout</button>
+        <button class="btn btn-outline-success" style="margin-right: 10px;" routerLink="/login" *ngIf="!userIsAuthenticated">Login</button>
+        <button class="btn btn-outline-warning" routerLink="/register" *ngIf="!userIsAuthenticated">Sign Up</button>
+        <!-- <button mat-button color=primary>Sign Up</button> -->
+        <button class="btn btn-outline-success" style="margin-right: 10px;" routerLink="/account" *ngIf="userIsAuthenticated">Account</button>
+        <button class="btn btn-outline-warning" *ngIf="userIsAuthenticated" (click)="onLogout()">Logout</button>
 
+      </div>
     </div>
+  </nav>
+
+
+  <div class="content" [@rotatedState]='state'>
+    <router-outlet></router-outlet>
+
   </div>
-</nav>
-
-
-<div class="content">
-  <router-outlet></router-outlet>
-
-</div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/service/user.service';
 import { User } from '../user.model';
+import {trigger, state, style, animate, transition} from '@angular/animations';
 
 @Component({
   selector: 'app-account-info',
