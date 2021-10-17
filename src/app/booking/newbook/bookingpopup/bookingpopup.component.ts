@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/hotels/hotel-list/hotel-list-item/hotel-list-item.component';
 import { Hotel } from 'src/app/hotels/hotel.model';
@@ -17,6 +17,7 @@ export class BookingpopupComponent implements OnInit {
   bookingForm: FormGroup;
   pricesToDisplay: any;
   weekendSurcharge: number;
+  resPrice: number;
 
   constructor(
     public dialogref: MatDialogRef<BookingpopupComponent>,
@@ -31,27 +32,28 @@ export class BookingpopupComponent implements OnInit {
     this.pricesToDisplay = delete this.selectedHotel.price['weekendSurcharge']
     console.log(this.pricesToDisplay)
     this.bookingForm = new FormGroup({
-      'selectedPrice': new FormControl(),
-      'startDate': new FormControl(),
-      'endDate': new FormControl()
+      'selectedPrice': new FormControl(null, {validators: [Validators.required]}),
+      'startDate': new FormControl(null, {validators: [Validators.required]}),
+      'endDate': new FormControl(null, {validators: [Validators.required]})
+    })
+    this.onChanges()
+  }
+
+  onChanges() {
+
+    this.bookingForm.valueChanges.subscribe(x => {
+      if (this.bookingForm.invalid){
+        return
+      }
+      this.resPrice = this.calculatePrice(new Date(this.bookingForm.value.startDate), new Date(this.bookingForm.value.endDate))
+      console.log(this.resPrice)
     })
   }
 
-  onConfirmBook() {
-    console.log("START "+ this.bookingForm.value.startDate)
-    console.log("END "+ this.bookingForm.value.endDate)
-
-    console.log(this.bookingForm.value.selectedPrice)
-    let bedChoice = this.bookingForm.value.selectedPrice[0];
+  calculatePrice(startDate: Date, endDate: Date){
+    let resPrice = 0
     let pricePerNight = this.bookingForm.value.selectedPrice[1];
 
-    console.log("Start: "+ this.bookingForm.value.startDate)
-    // console.log("Start + 1: "+ this.bookingForm.value.startDate.add(1, 'days'))
-    let startDate = new Date(this.bookingForm.value.startDate)
-    console.log("Start" + startDate)
-    let endDate = new Date(this.bookingForm.value.endDate)
-    let resPrice = 0
-    console.log("End: "+ this.bookingForm.value.endDate)
     for (let day = startDate;day <= endDate; day.setDate(day.getDate() + 1)) {
       if (day.getDay() === 0 || day.getDay() === 6) {
 
@@ -60,16 +62,29 @@ export class BookingpopupComponent implements OnInit {
         resPrice += pricePerNight
       }
     }
-    console.log(resPrice)
+    this.resPrice = resPrice
+    return resPrice
+  }
+
+  onConfirmBook() {
+    if (this.bookingForm.invalid){
+      return
+    }
+    let bedChoice = this.bookingForm.value.selectedPrice[0];
+    let pricePerNight = this.bookingForm.value.selectedPrice[1];
+    let startDate = new Date(this.bookingForm.value.startDate)
+    let endDate = new Date(this.bookingForm.value.endDate)
+    let resPrice = this.calculatePrice(startDate, endDate)
 
     let reservation = {
       hotel: this.selectedHotel._id,
       user: localStorage.getItem('userID'), //fix this
-      startDate: startDate,
-      endDate: endDate,
-      price: resPrice
+      startDate: new Date(this.bookingForm.value.startDate),
+      endDate: new Date(this.bookingForm.value.endDate),
+      price: resPrice,
+      bedChoice: bedChoice
     }
-
+    console.log(reservation)
     this.reservationService.bookReservation(reservation);
   }
 
