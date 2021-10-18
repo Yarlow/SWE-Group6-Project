@@ -24,6 +24,15 @@ export class ManagebooklistItemComponent implements OnInit {
 
   }
 
+  onUpdateReservation() {
+    let newDate = new Date(this.reservationElement.endDate.getDate() + 365)
+    let update = {
+      endDate: newDate
+    }
+    this.reservationService.updatedReservation(this.reservationElement._id, update)
+
+  }
+
   onDeleteReservation() {
     this.reservationService.deleteReservation(this.reservationElement._id)
   }

@@ -36,6 +36,12 @@ export class ReservationService {
     return this.reservationsUpdated.asObservable()
   }
 
+  updatedReservation(id: string, reservationUpdate: any) {
+    this.http.patch<{message: string}>('http://localhost:3000/api/reservations/'+id, reservationUpdate).subscribe(resData => {
+      
+    })
+  }
+
   deleteReservation(id: string) {
     this.http.delete<{message:string}>('http://localhost:3000/api/reservations/'+id).subscribe(responseData => {
       if (responseData.message === "success"){

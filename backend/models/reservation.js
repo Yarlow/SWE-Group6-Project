@@ -22,6 +22,10 @@ const reservationSchema = mongoose.Schema({
   price: {
     type: Number,
     required: true
+  },
+  bedChoice: {
+    type: String,
+    required: true
   }
 })
 

@@ -12,8 +12,12 @@ router.post('', (req, res, next) => {
     user: req.body.user,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
-    price: req.body.price
+    price: req.body.price,
+    bedChoice: req.body.bedChoice
   })
+
+  console.log("START" + reservation.startDate)
+  console.log("END" + reservation.endDate)
 
   //put the created reservation into the DB
   reservation.save().then(createdRes => {
