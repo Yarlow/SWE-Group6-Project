@@ -92,9 +92,9 @@ router.get('/user/:id', (req, res, next) => {
 })
 
 //This method will update a reservation in the database
-router.patch('', (req, res, next) => {
-  Reservation.findById(req.params.id).then(foundReservation => {
-    console.log("found reservation with id " + req.body.id)
+router.patch('/:id', (req, res, next) => {
+  Reservation.findByIdAndUpdate(req.params.id, req.body).then(foundReservation => {
+    console.log("found reservation with id " + foundReservation._id)
     //change the reservations end date
     console.log("this reservation ends " + foundReservation.endDate)
     res.status(200).json({
