@@ -24,10 +24,16 @@ router.get('/search', (req, res, next) => {
     query = {...query, name: req.query.hotelName}
   }
   if (req.query.amenities){
-    query = {...query, amenities: { $all :req.query.amenities}}
-    // console.log(query)
+      // q.where('amenities').contains(req.query.amenities)
+      for (let amen of req.query.amenities) {
+          console.log(amen)
+          q.where('amenities').in(amen)
+      }
   }
   if (req.query.minPrice || req.query.maxPrice) {
+    // let minPrice = req.query.minPrice ?? 0
+    // let maxPrice = req.query.maxPrice ?? 0
+
     if (req.query.bedChoice === "Any"){
       q.or(
         [q.where('price.standard').gt(req.query.minPrice).lt(req.query.maxPrice),
@@ -57,6 +63,10 @@ router.get('/search', (req, res, next) => {
 
   q.exec().then(hotels => {
     console.log(hotels)
+    res.status(200).json({
+        hotels: hotels,
+        message: "success"
+    })
   }).catch(err => {
     console.log(err)
   })

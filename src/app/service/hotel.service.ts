@@ -64,8 +64,9 @@ export class HotelService {
     params = userFilter
     console.log("PARAMS " + params)
     this.http.get<{hotels: Hotel[]}>('http://localhost:3000/api/hotels/search', {params: userFilter})
-      .subscribe(hotels => {
-
+      .subscribe(responseData => {
+          this.hotels = responseData.hotels
+          this.hotelsUpdated.next([...this.hotels])
     })
     // this.hotelsForView = this.hotels.filter(function(hotel) {
     //   return hotel.name.toLowerCase().includes(userFilter.nameFilter.toLowerCase()) && hotel.pricePerNightWeekday > userFilter.priceFilter[0] && hotel.pricePerNightWeekday < userFilter.priceFilter[1]
