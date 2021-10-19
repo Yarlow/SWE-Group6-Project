@@ -16,6 +16,9 @@ router.get('', (req, res, next) => {
 router.get('/search', (req, res, next) => {
   // console.log(req.query)
   let query = {}
+  var q = Hotel.find()
+  q.where('name').equals('Jack MiHoff')
+  console.log('bed choice ' + req.query.bed)
   if (req.query.hotelName){
     console.log("Hotel name query given")
     query = {...query, name: req.query.hotelName}
@@ -25,41 +28,55 @@ router.get('/search', (req, res, next) => {
     // console.log(query)
   }
   if (req.query.minPrice || req.query.maxPrice) {
-    if (req.query.bedChoice === "all"){
-        query = {...query, price: {$or: [
-          { '$and': [{king: {$lte: req.query.maxPrice}}, {king: {$gte: req.query.minPrice}}] },
-          {
-            '$and': [{queen: {$lte: req.query.maxPrice}}, {queen: {$gte: req.query.minPrice}}]
-          }, {
-            '$and': [{standard: {$lte: req.query.maxPrice}}, {standard: {$gte: req.query.minPrice}}]
-          }]}}
-    } else if (req.query.bedChoice ==="king"){
-      // query = {...query, price: {
-      //   '$and': [{king: {$lte: req.query.maxPrice}}, {king: {$gte: req.query.minPrice}}]
-      // }}
-      query = {...query, price:{
+    if (req.query.bedChoice === "Any"){
+      q.or(
+        [q.where('price.standard').gt(req.query.minPrice).lt(req.query.maxPrice),
+        q.where('price.queen').gt(req.query.minPrice).lt(req.query.maxPrice),
+        q.where('price.king').gt(req.query.minPrice).lt(req.query.maxPrice)]
+      )
+      // q.where('price.standard').gt(req.query.minPrice)
 
-      }}
-    } else if (req.query.bedChoice ==="queen"){
-      query = {...query, price: {
-        '$and': [{queen: {$lte: req.query.maxPrice}}, {queen: {$gte: req.query.minPrice}}]
-      }}
+    } else if (req.query.bed ==="Standard"){
+
+      q.where('price.standard').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
+      q.where('price.standard').lt(req.query.maxPrice)
+      console.log('minprice ' + req.query.minPrice)
+      console.log('maxPrice ' + req.query.maxPrice)
+
+    } else if (req.query.bedChoice ==="Queen"){
+      q.where('price.queen').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
+      q.where('price.queen').lt(req.query.maxPrice)
     } else {
-      query = {...query, price: {
-        '$and': [{standard: {$lte: req.query.maxPrice}}, {standard: {$gte: req.query.minPrice}}]
-      }}
+      q.where('price.king').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
+      q.where('price.king').lt(req.query.maxPrice)
     }
   }
   console.log(query)
 
-  Hotel.find({query}).then(foundHotels => {
-    console.log(foundHotels)
+
+
+  q.exec().then(hotels => {
+    console.log(hotels)
+  }).catch(err => {
+    console.log(err)
   })
+
+
+  // Hotel.find().then(foundHotels => {
+  //   foundHotels.where('name').contains('Jack');
+  //   console.log(foundHotels)
+  //   console.log("hi")
+  // })
+
 
 
 
   res.status(200).json({message:"stfu"})
 
 })
+
+// router.get('/new', (req, res, next) => {
+//   let hotel =
+// })
 
 module.exports = router

@@ -25,7 +25,13 @@ export class ManagebooklistItemComponent implements OnInit {
   }
 
   onUpdateReservation() {
-    let newDate = new Date(this.reservationElement.endDate.getDate() + 365)
+    console.log(this.reservationElement.endDate)
+    let endDate = new Date(this.reservationElement.endDate)
+
+    console.log("old date " + endDate.getDate())
+    let newDate = new Date(endDate.getDate() + 365)
+    console.log("new date "+ newDate)
+    console.log(newDate)
     let update = {
       endDate: newDate
     }
