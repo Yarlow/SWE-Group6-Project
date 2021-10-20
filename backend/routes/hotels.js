@@ -17,17 +17,36 @@ router.get('/search', (req, res, next) => {
   // console.log(req.query)
   let query = {}
   var q = Hotel.find()
-  q.where('name').equals('Jack MiHoff')
   console.log('bed choice ' + req.query.bed)
   if (req.query.hotelName){
-    console.log("Hotel name query given")
-    query = {...query, name: req.query.hotelName}
+
+
+    // q.regex('name', `^${req.query.hotelName}$`)
+    // q.find({name: { $regex: new RegExp(`^${req.query.hotelName}$`), $options: 'i'}})
+    // q.where('name').in(`/${req.query.hotelName}/i`)
+    // q.find({name: { $regex: `/${req.query.hotelName}/i`}})
+    // q.regex('name', /${req.query.hotelName}/i)
+
+    const regEx = new RegExp(req.query.hotelName, 'i')
+
+    q.regex('name', regEx)
+
+//    q.regex('name', /`Jack`/i) THIS WORKS
+
+    console.log("Hotel name query given " + req.query.hotelName)
+
+
   }
   if (req.query.amenities){
       // q.where('amenities').contains(req.query.amenities)
-      for (let amen of req.query.amenities) {
+      if (req.query.amenities === req.query.amenities+''){
+        q.where('amenities').in(req.query.amenities)
+      } else {
+        for (let amen of req.query.amenities) {
           console.log(amen)
           q.where('amenities').in(amen)
+        }
+
       }
   }
   if (req.query.minPrice || req.query.maxPrice) {
@@ -63,7 +82,7 @@ router.get('/search', (req, res, next) => {
 
   q.exec().then(hotels => {
     console.log(hotels)
-    res.status(200).json({
+    return res.status(200).json({
         hotels: hotels,
         message: "success"
     })
@@ -81,7 +100,7 @@ router.get('/search', (req, res, next) => {
 
 
 
-  res.status(200).json({message:"stfu"})
+  // res.status(200).json({message:"stfu"})
 
 })
 
