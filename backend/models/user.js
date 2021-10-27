@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    require: true
+    required: true
   },
   // reservations: [{
   //   type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +17,13 @@ const userSchema = mongoose.Schema({
   managerOf: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Hotel'
-  }]
+  }],
+
+  role: {
+    type: String,
+    required: true,
+    default: 'User'
+  }
 })
 
 

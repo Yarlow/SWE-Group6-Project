@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogData } from 'src/app/hotels/hotel-list/hotel-list-item/hotel-list-item.component';
+import { DialogData } from 'src/app/service/reservation.service';
 import { Hotel } from 'src/app/hotels/hotel.model';
 import { UserService } from 'src/app/service/user.service';
 import { ReservationService } from '../../../service/reservation.service'
@@ -18,6 +18,8 @@ export class BookingpopupComponent implements OnInit {
   pricesToDisplay: any;
   weekendSurcharge: number;
   resPrice: number;
+  actionText: string;
+  mode: string
 
   constructor(
     public dialogref: MatDialogRef<BookingpopupComponent>,
@@ -25,16 +27,31 @@ export class BookingpopupComponent implements OnInit {
     private reservationService: ReservationService,
     private userService: UserService
   ) { }
-
+  defaultPrice: number
+  defaultBed: string
   ngOnInit(): void {
     this.selectedHotel = this.data.hotel;
     this.weekendSurcharge = this.selectedHotel.price.weekendSurcharge;
     this.pricesToDisplay = delete this.selectedHotel.price['weekendSurcharge']
     console.log(this.pricesToDisplay)
+    this.actionText = this.data.reservation ? "Update Reservation" : "Book Reservation"
+    this.mode = this.data.reservation ? "Edit" : "Create"
+    let defaultStartDate = this.data.reservation.startDate ? this.data.reservation.startDate : null
+    let defaultEndDate = this.data.reservation.endDate ? this.data.reservation.endDate : null
+    if (this.data.reservation){
+
+      this.defaultBed = this.data.reservation.bedChoice
+      this.defaultPrice = this.data.hotel.price[this.defaultBed]
+      console.log(this.defaultPrice)
+      console.log(this.defaultBed)
+    }
+    // if (this.data.startDate){
+    //
+    // }
     this.bookingForm = new FormGroup({
       'selectedPrice': new FormControl(null, {validators: [Validators.required]}),
-      'startDate': new FormControl(null, {validators: [Validators.required]}),
-      'endDate': new FormControl(null, {validators: [Validators.required]})
+      'startDate': new FormControl(defaultStartDate, {validators: [Validators.required]}),
+      'endDate': new FormControl(defaultEndDate, {validators: [Validators.required]})
     })
     this.onChanges()
   }
@@ -75,7 +92,6 @@ export class BookingpopupComponent implements OnInit {
     let startDate = new Date(this.bookingForm.value.startDate)
     let endDate = new Date(this.bookingForm.value.endDate)
     let resPrice = this.calculatePrice(startDate, endDate)
-
     let reservation = {
       hotel: this.selectedHotel._id,
       user: localStorage.getItem('userID'), //fix this
@@ -84,8 +100,13 @@ export class BookingpopupComponent implements OnInit {
       price: resPrice,
       bedChoice: bedChoice
     }
-    console.log(reservation)
-    this.reservationService.bookReservation(reservation);
+    if (this.mode === "Create"){
+
+      console.log(reservation)
+      this.reservationService.bookReservation(reservation);
+    } else {
+      this.reservationService.updatedReservation(this.data.reservation._id ,reservation)
+    }
   }
 
 
