@@ -1,6 +1,6 @@
 const express = require("express")
 const Hotel = require("../models/hotel")
-
+const Room = require("../models/room")
 const router = express.Router()
 
 router.get('', (req, res, next) => {
@@ -107,5 +107,73 @@ router.get('/search', (req, res, next) => {
 // router.get('/new', (req, res, next) => {
 //   let hotel =
 // })
+
+router.post('', (req, res, next) => {
+  let hotel = {
+    name: req.body.name,
+    rooms: req.body.rooms,
+    amenities: req.body.amenities,
+    managerPassword: "NeedToRemove"
+  }
+  if (req.body.price.standard){
+    hotel = {
+      ...hotel,
+      price: {
+        ...hotel.price,
+        standard: req.body.price.standard
+      }
+    }
+  }
+  if (req.body.price.queen) {
+    hotel = {
+      ...hotel,
+      price: {
+        ...hotel.price,
+        queen: req.body.price.queen
+      }
+    }
+  }
+  if (req.body.price.king) {
+    hotel = {
+      ...hotel,
+      price: {
+        ...hotel.price,
+        king: req.body.price.king
+      }
+    }
+  }
+
+  const hotelObj = new Hotel(hotel)
+  hotelObj.save().then(createdHotel => {
+    let numStandard = createdHotel.rooms * 0.5;
+    let numQueen = createdHotel.rooms * 0.3;
+    let numKing = createdHotel.rooms * 0.2;
+    const standardRoom = {
+      hotel: createdHotel._id,
+      roomType: "Standard",
+    }
+    const queenRoom ={
+      hotel: createdHotel._id,
+      roomType: "Queen",
+    }
+    const kingRoom = {
+      hotel: createdHotel._id,
+      roomType: "King",
+    }
+    for (; numStandard > 0; numStandard--){
+      let standRoomObj = new Room(standardRoom)
+      standRoomObj.save()
+    }
+    for (; numQueen > 0; numQueen--){
+      let queenRoomObj = new Room(queenRoom)
+      queenRoomObj.save()
+    }
+    for (; numKing > 0; numKing--){
+      let kingRoomObj = new Room(kingRoom)
+      kingRoomObj.save()
+    }
+    return res.status(200).json({message: "noice"});
+  })
+})
 
 module.exports = router

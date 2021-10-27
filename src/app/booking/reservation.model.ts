@@ -5,5 +5,6 @@ export interface Reservation {
   hotel: Hotel,
   startDate: Date,
   endDate: Date,
-  price: number
+  price: number,
+  bedChoice: string
 }

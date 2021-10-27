@@ -145,4 +145,16 @@ router.get('/:id', (req,res,next) => {
   })
 })
 
+router.post('/token', (req, res, next) => {
+  let token = req.body.token;
+  if (!token){
+    return res.status(401).json({message: 'No Token'})
+  }
+
+  jwt.verify(token, 'secret_passphrase', (err, user) => {
+    console.log(user)
+  })
+
+})
+
 module.exports = router

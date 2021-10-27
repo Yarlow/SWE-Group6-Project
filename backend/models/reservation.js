@@ -26,6 +26,10 @@ const reservationSchema = mongoose.Schema({
   bedChoice: {
     type: String,
     required: true
+  },
+  room: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Room'
   }
 })
 
