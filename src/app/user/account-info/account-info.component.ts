@@ -26,4 +26,8 @@ export class AccountInfoComponent implements OnInit {
     })
   }
 
+  testToken(){
+    this.userService.testToken();
+  }
+
 }

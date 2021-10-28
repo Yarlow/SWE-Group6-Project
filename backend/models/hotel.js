@@ -7,7 +7,7 @@ const hotelSchema = mongoose.Schema({
   },
   rooms: {
     type: Number,
-    require: true
+    required: true
   },
   price: {
     standard: Number,

@@ -12,8 +12,12 @@ router.post('', (req, res, next) => {
     user: req.body.user,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
-    price: req.body.price
+    price: req.body.price,
+    bedChoice: req.body.bedChoice
   })
+
+  console.log("START" + reservation.startDate)
+  console.log("END" + reservation.endDate)
 
   //put the created reservation into the DB
   reservation.save().then(createdRes => {
@@ -92,9 +96,9 @@ router.get('/user/:id', (req, res, next) => {
 })
 
 //This method will update a reservation in the database
-router.patch('', (req, res, next) => {
-  Reservation.findById(req.params.id).then(foundReservation => {
-    console.log("found reservation with id " + req.body.id)
+router.patch('/:id', (req, res, next) => {
+  Reservation.findByIdAndUpdate(req.params.id, req.body).then(foundReservation => {
+    console.log("found reservation with id " + foundReservation._id)
     //change the reservations end date
     console.log("this reservation ends " + foundReservation.endDate)
     res.status(200).json({

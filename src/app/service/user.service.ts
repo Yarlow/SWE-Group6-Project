@@ -165,4 +165,12 @@ export class UserService {
       userId: userId
     }
   }
+
+  testToken(){
+    const token = localStorage.getItem("token")
+    let body = {token: token}
+    this.http.post('http://localhost:3000/api/users/token', body).subscribe(responseData => {
+      
+    })
+  }
 }

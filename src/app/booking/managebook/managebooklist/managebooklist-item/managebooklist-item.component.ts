@@ -1,5 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { BookingpopupComponent } from 'src/app/booking/newbook/bookingpopup/bookingpopup.component';
 import { Reservation } from 'src/app/booking/reservation.model';
 import { ReservationService } from 'src/app/service/reservation.service';
 
@@ -15,13 +17,22 @@ export class ManagebooklistItemComponent implements OnInit {
   formatStartDate: string
   formatEndDate:string
 
-  constructor(private reservationService: ReservationService) { }
+  constructor(private reservationService: ReservationService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     console.log("RES " + this.reservationElement)
     this.formatStartDate = formatDate(this.reservationElement.startDate,'fullDate', 'en_US')
     this.formatEndDate = formatDate(this.reservationElement.endDate,'fullDate', 'en_US')
 
+  }
+
+  onUpdateReservation() {
+    let data = {
+      hotel: this.reservationElement.hotel,
+      reservation: this.reservationElement
+    }
+    this.reservationService.openBookingPopup(data);
+    
   }
 
   onDeleteReservation() {
