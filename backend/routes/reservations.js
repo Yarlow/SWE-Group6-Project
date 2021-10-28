@@ -5,6 +5,11 @@ const User = require("../models/user")
 
 const router = express.Router()
 
+
+/*
+ * every reservation has a user, so iterate through reservations and match up user objects ids
+ */
+//create a reservation and insert into the database
 router.post('', (req, res, next) => {
   //create new reservation with data sent in request
   let reservation = new Reservation({
@@ -41,18 +46,27 @@ router.post('', (req, res, next) => {
 
 })
 
-//This method will delete the reservation with the object id that is passed in via the url
+ /*
+ * Delete a Reservation in the database. Added some error checking.
+ * Response 404 indicates server cant find requested resource.
+ */
 router.delete('/:id', (req, res, next) => {
-  console.log(req.params.id)
+  console.log("res being passed in: " + req.params.id)
   Reservation.findByIdAndRemove(req.params.id).then(FoundReservation => {
-    //see object that got deleted in the console
-    console.log(FoundReservation)
-    //configure the response
-    res.status(200).json({
-      message: "success",
-      reservation: FoundReservation
-    })
-
+    console.log("what was saved into variable: " + FoundReservation)
+    //if reservation is not in the db
+    if (FoundReservation == null) {
+      res.status(404).json({
+        error: "reservation does not exist "
+      })
+    }
+    //if res has been found and deleted
+    else {
+      res.status(200).json({
+        reservation: FoundReservation,
+        action: "deleted"
+      })
+    }
   })
 
 })

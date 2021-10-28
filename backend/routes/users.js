@@ -157,4 +157,30 @@ router.post('/token', (req, res, next) => {
 
 })
 
+
+/*
+ * Delete a user in the database. Added some error checking.
+ * Response 404 indicates server cant find requested resource.
+ */
+router.delete('/:id', (req, res, next) => {
+  console.log("what is being passed as a parameter: " + req.params.id)
+  User.findByIdAndRemove(req.params.id).then(FoundUser => {
+    console.log("what is being saved in variabel: " + FoundUser)
+    //reponse 404 if user does not exist in db
+    if (FoundUser == null) {
+      res.status(404).json({
+        action: "user does not exist "
+      })
+    }
+    //response 200 if user has been found and deleted
+    else {
+      res.status(200).json({
+        user: FoundUser,
+        action: "deleted"
+      })
+    }
+  })
+})
+
+
 module.exports = router
