@@ -11,7 +11,7 @@ const roomSchema = mongoose.Schema({
   },
   bookedOn: {
     type: [Date],
-    default: []
+    default: ["alex"]
   }
 })
 
