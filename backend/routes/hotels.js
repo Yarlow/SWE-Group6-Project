@@ -1,8 +1,15 @@
+/* These functions handle requests regarding hotels. Such as
+ * what hotels exist, how many rooms they have, amenities and
+ * so forth.
+ */
 const express = require("express")
 const Hotel = require("../models/hotel")
 const Room = require("../models/room")
 const router = express.Router()
 
+/*
+ * get list of  existing hotels. 
+ */
 router.get('', (req, res, next) => {
   Hotel.find().then(documents => {
     res.status(200).json({
@@ -13,6 +20,9 @@ router.get('', (req, res, next) => {
   })
 } )
 
+/*
+ * Search hotels  
+ */
 router.get('/search', (req, res, next) => {
   // console.log(req.query)
   let query = {}
@@ -34,7 +44,6 @@ router.get('/search', (req, res, next) => {
 //    q.regex('name', /`Jack`/i) THIS WORKS
 
     console.log("Hotel name query given " + req.query.hotelName)
-
 
   }
   if (req.query.amenities){
@@ -104,17 +113,20 @@ router.get('/search', (req, res, next) => {
 
 })
 
-// router.get('/new', (req, res, next) => {
-//   let hotel =
-// })
 
+/*
+ * Create a hotel and insert into the db.
+ */
 router.post('', (req, res, next) => {
+  //get JSON request data and save into local variables
   let hotel = {
     name: req.body.name,
     rooms: req.body.rooms,
     amenities: req.body.amenities,
     managerPassword: "NeedToRemove"
   }
+
+  //3 possiblities for pricing. standard, queen, or king.
   if (req.body.price.standard){
     hotel = {
       ...hotel,
@@ -143,6 +155,7 @@ router.post('', (req, res, next) => {
     }
   }
 
+  //Create the hotel based on the request data and save to db
   const hotelObj = new Hotel(hotel)
   hotelObj.save().then(createdHotel => {
     let numStandard = createdHotel.rooms * 0.5;
@@ -174,6 +187,9 @@ router.post('', (req, res, next) => {
     }
     return res.status(200).json({message: "noice"});
   })
+
 })
+
+
 
 module.exports = router

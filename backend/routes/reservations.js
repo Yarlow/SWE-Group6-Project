@@ -2,11 +2,15 @@ const express = require("express")
 const Reservation = require("../models/reservation")
 const Hotel = require("../models/hotel")
 const User = require("../models/user")
+const reservation = require("../models/reservation")
+const Room = require("../models/room")
 
 const router = express.Router()
 
+//create a reservation and insert into the database
 router.post('', (req, res, next) => {
   //create new reservation with data sent in request
+
   let reservation = new Reservation({
     hotel: req.body.hotel,
     user: req.body.user,
@@ -15,11 +19,60 @@ router.post('', (req, res, next) => {
     price: req.body.price,
     bedChoice: req.body.bedChoice
   })
+  console.log("desired hotel: " + req.body.hotel)
+  console.log("desired bed: " + req.body.bedChoice)
+  const dates = [];
+  
+  Room.findOne({ hotel: req.body.hotel, roomType: req.body.bedChoice }).lean().exec(function (err, room) {
+    if (err) {
+      console.log(err)
+    }
+    else {
+      const foundRoom = new Room(room)
+      //js gets day before actual date for some reason, but dates are saved accurately in bookedOn array
+      let start = new Date(req.body.startDate)
+      let end = new Date(req.body.endDate)
+      var i = 1;
+      //incrementing days by 1
+      start.setDate(start.getDate())
+      end.setDate(end.getDate())
+      
+      var difference = end - start
 
-  console.log("START" + reservation.startDate)
-  console.log("END" + reservation.endDate)
+      console.log("Start date: " + start)
+      console.log("end date: " + end)
+      console.log("difference between the two days: " + difference)
 
-  //put the created reservation into the DB
+      //add the initial start date to the bookedOn array
+      console.log("adding day: " + start)
+      foundRoom.bookedOn.push(new Date(start))
+
+      //iterate through days in reservation
+      while (difference != 0) {
+        console.log("INSIDE OF WHILE LOOP:")
+        //increment the start day by one
+        start.setDate(start.getDate() + 1)
+        //add to bookedOn array
+        console.log("adding day: " + start)
+        foundRoom.bookedOn.push(new Date(start))
+        //calulate difference again
+        difference = end - start
+        console.log("difference after iteration " + i + ":" + difference)
+        i += 1;
+      }
+      
+      console.log("Day after start date " + start)
+      console.log("Room found: " + foundRoom)
+      console.log("reserved: " + foundRoom.bookedOn)
+      
+    }
+  })
+
+  res.status(200).json({
+    message: "ok"
+  })
+
+ /* //put the created reservation into the DB
   reservation.save().then(createdRes => {
     // let user = User.findById(req.body.user).then(user => {
     //   console.log(user)
@@ -35,26 +88,47 @@ router.post('', (req, res, next) => {
       res.status(201).json({
         message: 'Was it made right?'
       })
-
     })
-  })
-
+  })*/
 })
 
-//This method will delete the reservation with the object id that is passed in via the url
-router.delete('/:id', (req, res, next) => {
-  console.log(req.params.id)
-  Reservation.findByIdAndRemove(req.params.id).then(FoundReservation => {
-    //see object that got deleted in the console
-    console.log(FoundReservation)
-    //configure the response
+
+/*Get reservations by room id*/
+router.get('/:RoomId', (req, res, next) => {
+
+  console.log('Room id passed in as a parameter: ' + req.params.RoomId)
+  Room.findById(req.params.RoomId).then(foundRoom => {
+    var start = new Date();
+    console.log("desired start date: " + req.body.startDate)
     res.status(200).json({
-      message: "success",
-      reservation: FoundReservation
+      message: "ok",
+      "room found": foundRoom
     })
-
   })
+})
 
+ /*
+ * Delete a Reservation in the database. Added some error checking.
+ * Response 404 indicates server cant find requested resource.
+ */
+router.delete('/:id', (req, res, next) => {
+  console.log("res being passed in: " + req.params.id)
+  Reservation.findByIdAndRemove(req.params.id).then(FoundReservation => {
+    console.log("what was saved into variable: " + FoundReservation)
+    //if reservation is not in the db
+    if (FoundReservation == null) {
+      res.status(404).json({
+        error: "reservation does not exist "
+      })
+    }
+    //if res has been found and deleted
+    else {
+      res.status(200).json({
+        reservation: FoundReservation,
+        action: "deleted"
+      })
+    }
+  })
 })
 
 //this method will get all of the reservations for a specific user. The user id is accepted as a parameter via the url
