@@ -7,10 +7,10 @@ const Room = require("../models/room")
 
 const router = express.Router()
 
-//create a reservation and insert into the database
-router.post('', (req, res, next) => {
-  //create new reservation with data sent in request
 
+router.post('', (req, res, next) => {
+
+  //save user request information into variables
   let reservation = new Reservation({
     hotel: req.body.hotel,
     user: req.body.user,
@@ -19,78 +19,71 @@ router.post('', (req, res, next) => {
     price: req.body.price,
     bedChoice: req.body.bedChoice
   })
-  console.log("desired hotel: " + req.body.hotel)
-  console.log("desired bed: " + req.body.bedChoice)
-  const dates = [];
+
+  const days = 1000 * 60 * 60 * 24
+
+  //create array to save requested days into
+  const reqDays = []
+  //convert start and end dates to date objects
+  var start = new Date(req.body.startDate)
+  var end = new Date(req.body.endDate)
+
+  //dates received from postman are a day behind, may have to fix in the future. For now I will increment received dates by 1 day.
+  start.setDate(start.getDate() + 1)
+  end.setDate(end.getDate() + 1)
+
+  //calculate the number of days requested by the user 
+  var difference = end - start
+  const numOfDays = Math.floor(difference / days) + 1
+  console.log("Number of days requested by user: " + numOfDays)
+
+  //iterate through dates and add them to the requested dates array
+  while (difference != 0) {
+    reqDays.push(new Date(start))
+    difference = end - start
+    start.setDate(start.getDate() + 1)
+  }
   
-  Room.findOne({ hotel: req.body.hotel, roomType: req.body.bedChoice }).lean().exec(function (err, room) {
-    if (err) {
-      console.log(err)
-    }
-    else {
-      const foundRoom = new Room(room)
-      //js gets day before actual date for some reason, but dates are saved accurately in bookedOn array
-      let start = new Date(req.body.startDate)
-      let end = new Date(req.body.endDate)
-      var i = 1;
-      //incrementing days by 1
-      start.setDate(start.getDate())
-      end.setDate(end.getDate())
-      
-      var difference = end - start
+  //this loop displays what is saved into the requested dates array 
+  for (i = 0; i < 3; i++) {
+    console.log(reqDays[i].toLocaleDateString('en-US'))
+  }
 
-      console.log("Start date: " + start)
-      console.log("end date: " + end)
-      console.log("difference between the two days: " + difference)
-
-      //add the initial start date to the bookedOn array
-      console.log("adding day: " + start)
-      foundRoom.bookedOn.push(new Date(start))
-
-      //iterate through days in reservation
-      while (difference != 0) {
-        console.log("INSIDE OF WHILE LOOP:")
-        //increment the start day by one
-        start.setDate(start.getDate() + 1)
-        //add to bookedOn array
-        console.log("adding day: " + start)
-        foundRoom.bookedOn.push(new Date(start))
-        //calulate difference again
-        difference = end - start
-        console.log("difference after iteration " + i + ":" + difference)
-        i += 1;
-      }
-      
-      console.log("Day after start date " + start)
-      console.log("Room found: " + foundRoom)
-      console.log("reserved: " + foundRoom.bookedOn)
-      
-    }
-  })
-
-  res.status(200).json({
-    message: "ok"
-  })
-
- /* //put the created reservation into the DB
-  reservation.save().then(createdRes => {
-    // let user = User.findById(req.body.user).then(user => {
-    //   console.log(user)
-    //   user.reservations.push(createdRes._id)
-    //   user.save().then(updatedUser => {
-    //     console.log(updatedUser)
-    //   })
-    // })
-
-    createdRes.populate('hotel').then(populatedRes => {
-      // console.log(populatedRes.hotel.name)
-      // console.log(populatedRes)
-      res.status(201).json({
-        message: 'Was it made right?'
+  /* findOne function is used to find a room that is available. breakdown of query passed as its arguement:
+   * bookedOn: { $nin: reqDays } --> return a room that does not have any of these array values in it's bookedOn array
+   * hotel: req.body.hotel --> room hotel id field must match that of the request
+   * roomType: req.body.bedChoice --> room roomType field must match that of the request
+   */
+  Room.findOne({ bookedOn: { $nin: reqDays }, hotel: req.body.hotel, roomType: req.body.bedChoice }, function(err, foundRoom) {
+    //If a room was not found
+    if (foundRoom == null) {
+      console.log("dates unavailable")
+      //respond
+      res.status(400).json({
+        message: "reservation is not available."
       })
-    })
-  })*/
-})
+    }
+    //if a room is found  
+    else {
+      //add the requested dates to the rooms bookedOn array
+      for (i = 0; i <= numOfDays; i++) {
+        foundRoom.bookedOn.push(reqDays[i])
+      }
+
+      //set the reservations room id equal to the found rooms id 
+      reservation.Room = foundRoom._id
+
+      //save the new reservation document and save the changes made to the existing room 
+      reservation.save()
+      foundRoom.save()
+      //respond 
+      res.status(200).json({
+        message: "Reservation created and room bookedOn updated"
+      })
+    }
+    
+  })
+})   
 
 
 /*Get reservations by room id*/
