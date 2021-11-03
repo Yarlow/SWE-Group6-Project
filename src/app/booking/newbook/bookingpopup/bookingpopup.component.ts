@@ -27,19 +27,22 @@ export class BookingpopupComponent implements OnInit {
     private reservationService: ReservationService,
     private userService: UserService
   ) { }
-  defaultPrice: number
-  defaultBed: string
+  defaultPrice: number = 0
+  defaultBed: string = ""
+  defaultStartDate: Date = null
+  defaultEndDate: Date = null
   ngOnInit(): void {
+    console.log("Booking init");
     this.selectedHotel = this.data.hotel;
     this.weekendSurcharge = this.selectedHotel.price.weekendSurcharge;
     this.pricesToDisplay = delete this.selectedHotel.price['weekendSurcharge']
     console.log(this.pricesToDisplay)
     this.actionText = this.data.reservation ? "Update Reservation" : "Book Reservation"
     this.mode = this.data.reservation ? "Edit" : "Create"
-    let defaultStartDate = this.data.reservation.startDate ? this.data.reservation.startDate : null
-    let defaultEndDate = this.data.reservation.endDate ? this.data.reservation.endDate : null
     if (this.data.reservation){
 
+      this.defaultStartDate = this.data.reservation.startDate ? this.data.reservation.startDate : null
+      this.defaultEndDate = this.data.reservation.endDate ? this.data.reservation.endDate : null
       this.defaultBed = this.data.reservation.bedChoice
       this.defaultPrice = this.data.hotel.price[this.defaultBed]
       console.log(this.defaultPrice)
@@ -50,8 +53,8 @@ export class BookingpopupComponent implements OnInit {
     // }
     this.bookingForm = new FormGroup({
       'selectedPrice': new FormControl(null, {validators: [Validators.required]}),
-      'startDate': new FormControl(defaultStartDate, {validators: [Validators.required]}),
-      'endDate': new FormControl(defaultEndDate, {validators: [Validators.required]})
+      'startDate': new FormControl(this.defaultStartDate, {validators: [Validators.required]}),
+      'endDate': new FormControl(this.defaultEndDate, {validators: [Validators.required]})
     })
     this.onChanges()
   }
