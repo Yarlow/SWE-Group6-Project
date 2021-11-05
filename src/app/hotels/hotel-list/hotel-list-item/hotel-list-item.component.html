@@ -29,6 +29,14 @@
             </p>
           </div>
         </div>
+        <div class="row">
+
+          <div class="col">
+            <p>
+              Weekend Surcharge: {{hotelElement.price.weekendSurcharge * 100}}%
+            </p>
+          </div>
+        </div>
         <p class="amenityList">
           Amenities:
           <span *ngFor="let amenity of hotelElement.amenities">
