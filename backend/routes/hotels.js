@@ -8,7 +8,7 @@ const Room = require("../models/room")
 const router = express.Router()
 
 /*
- * get list of  existing hotels. 
+ * get list of  existing hotels.
  */
 router.get('', (req, res, next) => {
   Hotel.find().then(documents => {
@@ -21,7 +21,7 @@ router.get('', (req, res, next) => {
 } )
 
 /*
- * Search hotels  
+ * Search hotels
  */
 router.get('/search', (req, res, next) => {
   // console.log(req.query)
@@ -51,10 +51,17 @@ router.get('/search', (req, res, next) => {
       if (req.query.amenities === req.query.amenities+''){
         q.where('amenities').in(req.query.amenities)
       } else {
-        for (let amen of req.query.amenities) {
-          console.log(amen)
-          q.where('amenities').in(amen)
-        }
+        let amenitiesQuery = {}
+        q.where('amenities').all(req.query.amenities)
+        // for (let amen of req.query.amenities) {
+        //   console.log(amen)
+        //   amenitiesQuery = {
+        //     ...amenitiesQuery,
+        //     'amenities': {$in: {amen}}
+        //   }
+        //   // q.where('amenities').in(amen)
+        // }
+        // q.and(amenitiesQuery)
 
       }
   }
@@ -154,6 +161,15 @@ router.post('', (req, res, next) => {
       }
     }
   }
+  if (req.body.price.weekendSurcharge) {
+    hotel = {
+      ...hotel,
+      price: {
+        ...hotel.price,
+        weekendSurcharge: req.body.price.weekendSurcharge
+      }
+    }
+  }
 
   //Create the hotel based on the request data and save to db
   const hotelObj = new Hotel(hotel)
@@ -163,15 +179,15 @@ router.post('', (req, res, next) => {
     let numKing = createdHotel.rooms * 0.2;
     const standardRoom = {
       hotel: createdHotel._id,
-      roomType: "Standard",
+      roomType: "standard",
     }
     const queenRoom ={
       hotel: createdHotel._id,
-      roomType: "Queen",
+      roomType: "queen",
     }
     const kingRoom = {
       hotel: createdHotel._id,
-      roomType: "King",
+      roomType: "king",
     }
     for (; numStandard > 0; numStandard--){
       let standRoomObj = new Room(standardRoom)
