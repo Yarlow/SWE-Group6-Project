@@ -11,6 +11,7 @@ import {trigger, state, style, animate, transition} from '@angular/animations';
 })
 export class NavComponent implements OnInit, OnDestroy {
   userIsAuthenticated: boolean = false;
+  userRole: string = "";
   private authListenerSubscription: Subscription
   constructor(private userService: UserService) { }
 

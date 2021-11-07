@@ -67,11 +67,12 @@ router.post('/login', (req, res, next) => {
     if (foundUser.password == req.body.password) {
 
       const token = jwt.sign(
-        {username: foundUser.username, userId: foundUser._id},
+        {username: foundUser.username, userId: foundUser._id, role: foundUser.role},
         'secret_passphrase',
         { expiresIn: "6h" })
 
       console.log("Login success")
+      console.log(foundUser)
       // res.status(200).json({
       //   message: "Login Success",
       //   user: foundUser._id
@@ -118,7 +119,8 @@ router.get('/:id', (req,res,next) => {
             _id: user._id,
             username: user.username,
             reservations: reservations,
-            managerOf: user.managerOf
+            managerOf: user.managerOf,
+            role: user.role
 
           }
         })
