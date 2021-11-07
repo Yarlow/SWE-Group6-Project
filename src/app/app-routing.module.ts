@@ -5,6 +5,7 @@ import { NewbookComponent } from './booking/newbook/newbook.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './service/auth.guard';
 import { AccountInfoComponent } from './user/account-info/account-info.component';
+import { AdminComponent } from './user/admin/admin.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 
@@ -33,6 +34,11 @@ const routes: Routes = [
   {
     path: 'account',
     component: AccountInfoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin',
+    component: AdminComponent,
     canActivate: [AuthGuard]
   }
 ];

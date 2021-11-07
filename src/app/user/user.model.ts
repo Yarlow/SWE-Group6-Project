@@ -5,5 +5,6 @@ export interface User {
   _id: string,
   username: string,
   reservations: Reservation[],
-  managerOf: Hotel[]
+  managerOf: Hotel[],
+  role: string
 }

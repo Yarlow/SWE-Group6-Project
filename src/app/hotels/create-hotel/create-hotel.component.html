@@ -1,0 +1,58 @@
+<mat-card class="createHotelForm">
+  <form (submit)="onCreateHotel()" [formGroup]="createHotelForm">
+    <mat-form-field class="formField">
+      <input
+        type="text"
+        matInput
+        formControlName="hotelName"
+        placeholder="Hotel Name">
+    </mat-form-field>
+
+    <mat-form-field class="formField">
+      <input
+        type="number"
+        matInput
+        formControlName="numRooms"
+        placeholder="Total Room Number">
+    </mat-form-field>
+
+    <mat-form-field class="formField">
+      <input
+        type="text"
+        matInput
+        formControlName="standardPrice"
+        placeholder="Price of Standard Room">
+    </mat-form-field>
+
+    <mat-form-field class="formField">
+      <input
+        type="text"
+        matInput
+        formControlName="queenPrice"
+        placeholder="Price of Queen Room">
+    </mat-form-field>
+
+    <mat-form-field class="formField">
+      <input
+        type="text"
+        matInput
+        formControlName="kingPrice"
+        placeholder="Price of King Room">
+    </mat-form-field>
+
+    <mat-form-field class="formField">
+      <input type="text"
+        matInput
+        formControlName="weekendSurcharge"
+        placeholder="Weekend Surcharge">
+    </mat-form-field>
+
+    <mat-form-field class="formField">
+      <mat-label>Amenities</mat-label>
+      <mat-select formControlName="selectedAmenities" multiple>
+        <mat-option *ngFor="let amenity of amenities" [value]="amenity">{{amenity}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</mat-card>

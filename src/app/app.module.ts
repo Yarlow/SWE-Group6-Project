@@ -33,7 +33,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { BookingpopupComponent } from './booking/newbook/bookingpopup/bookingpopup.component';
 import { ManagebooklistComponent } from './booking/managebook/managebooklist/managebooklist.component';
-import { ManagebooklistItemComponent } from './booking/managebook/managebooklist/managebooklist-item/managebooklist-item.component'
+import { ManagebooklistItemComponent } from './booking/managebook/managebooklist/managebooklist-item/managebooklist-item.component';
+import { AdminComponent } from './user/admin/admin.component';
+import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.component'
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { ManagebooklistItemComponent } from './booking/managebook/managebooklist
     BookingpopupComponent,
     ManagebooklistComponent,
     ManagebooklistItemComponent,
+    AdminComponent,
+    CreateHotelComponent,
   ],
   imports: [
     BrowserModule,

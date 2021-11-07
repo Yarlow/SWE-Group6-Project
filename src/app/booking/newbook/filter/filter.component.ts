@@ -21,7 +21,7 @@ export class FilterComponent implements OnInit {
     ceil: 1000
   }
   bedOptions: string[] = ['Any', 'Standard', 'Queen', 'King']
-  amenities: string[] = ['Pool', 'Spa', 'Breakfast', 'A 15 inch dildo in the nightstand']
+  amenities: string[] = ['Gym', 'Spa', 'Pool', 'Business Office', 'WiFi']
   selected = -1;
 
   constructor(private hotelService: HotelService, private router: Router) { }

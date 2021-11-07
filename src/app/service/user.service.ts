@@ -114,7 +114,8 @@ export class UserService {
         _id: responseData.user._id,
         username: responseData.user.username,
         reservations: responseData.user.reservations,
-        managerOf: responseData.user.managerOf
+        managerOf: responseData.user.managerOf,
+        role: responseData.user.role
       }
       this.userUpdated.next(this.user)
       // return {
@@ -166,11 +167,17 @@ export class UserService {
     }
   }
 
+  getRole(){
+    console.log(this.user.role)
+    return this.user.role;
+  }
+
   testToken(){
     const token = localStorage.getItem("token")
     let body = {token: token}
     this.http.post('http://localhost:3000/api/users/token', body).subscribe(responseData => {
-      
+
     })
   }
+
 }

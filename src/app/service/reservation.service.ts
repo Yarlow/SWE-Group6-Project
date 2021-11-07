@@ -56,13 +56,13 @@ export class ReservationService {
 
   updatedReservation(id: string, reservationUpdate: any) {
     this.http.patch<{message: string}>('http://localhost:3000/api/reservations/'+id, reservationUpdate).subscribe(resData => {
-      
+
     })
   }
 
   deleteReservation(id: string) {
-    this.http.delete<{message:string}>('http://localhost:3000/api/reservations/'+id).subscribe(responseData => {
-      if (responseData.message === "success"){
+    this.http.delete<{action:string}>('http://localhost:3000/api/reservations/'+id).subscribe(responseData => {
+      if (responseData.action === "deleted"){
         const updatedReservations = this.reservations.filter(reservation => reservation._id !== id)
         this.reservations = updatedReservations
         this.reservationsUpdated.next([...this.reservations])
