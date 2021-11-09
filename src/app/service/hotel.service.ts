@@ -75,4 +75,10 @@ export class HotelService {
     // this.hotelsUpdated.next([...this.hotelsForView])
   }
 
+  createHotel(hotel){
+    this.http.post<{message: string}>('http://localhost:3000/api/hotels', hotel).subscribe(responseData => {
+      console.log(responseData)
+    })
+  }
+
 }

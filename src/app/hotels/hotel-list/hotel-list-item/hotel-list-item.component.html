@@ -11,21 +11,21 @@
             </h2>
 
         <div class="row">
-          <div class="col" *ngIf="true">
+          <div class="col" *ngIf="hotelElement.price.standard">
             <p>
-              Price (standard): ${{hotelElement.price.standard }}
+              <b>Price (standard)</b>: ${{hotelElement.price.standard }}
             </p>
 
           </div>
-          <div class="col">
+          <div class="col" *ngIf="hotelElement.price.queen">
             <p>
-              Price (queen): ${{hotelElement.price.queen}}
+              <b>Price (queen)</b>: ${{hotelElement.price.queen}}
             </p>
 
           </div>
           <div class="col" *ngIf="hotelElement.price.king">
             <p>
-              Price (king): ${{hotelElement.price.king}}
+              <b>Price (king)</b>: ${{hotelElement.price.king}}
             </p>
           </div>
         </div>
