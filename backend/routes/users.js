@@ -35,7 +35,6 @@ router.post('', (req, res, next) => {
       hotel = foundHotel
       console.log(foundHotel)
     })
-
   }
   console.log(req.body)
   const user = new User({

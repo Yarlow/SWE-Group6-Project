@@ -12,18 +12,14 @@ const router = express.Router()
 router.post('', (req, res, next) => {
 
   //save user request information into variables
-
   const days = 1000 * 60 * 60 * 24
 
   //create array to save requested days into
   const reqDays = []
+
   //convert start and end dates to date objects
   var start = new Date(req.body.startDate)
   var end = new Date(req.body.endDate)
-
-  //dates received from postman are a day behind, may have to fix in the future. For now I will increment received dates by 1 day.
-  start.setDate(start.getDate() + 1)
-  end.setDate(end.getDate() + 1)
 
   //calculate the number of days requested by the user
   var difference = end - start
@@ -37,20 +33,13 @@ router.post('', (req, res, next) => {
     start.setDate(start.getDate() + 1)
   }
 
-  //this loop displays what is saved into the requested dates array
-  // for (i = 0; i < 3; i++) {
-  //   console.log(reqDays[i].toLocaleDateString('en-US'))
-  // }
-
   /* findOne function is used to find a room that is available. breakdown of query passed as its arguement:
    * bookedOn: { $nin: reqDays } --> return a room that does not have any of these array values in it's bookedOn array
    * hotel: req.body.hotel --> room hotel id field must match that of the request
    * roomType: req.body.bedChoice --> room roomType field must match that of the request
    */
-   console.log(req.body.hotel)
-   console.log(req.body.bedChoice)
 
-  Room.findOne({bookedOn: {$nin: reqDays}, hotel: new ObjectId(req.body.hotel), roomType:req.body.bedChoice }, function(err, foundRoom) {
+  Room.findOne({ bookedOn: { $nin: reqDays }, hotel: new ObjectId(req.body.hotel), roomType: req.body.bedChoice }, function (err, foundRoom) {
     //If a room was not found
     console.log(err)
     console.log(foundRoom)

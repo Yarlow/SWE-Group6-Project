@@ -2,7 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\backend",
-    "\\backend\\models",
+    "\\backend\\routes",
     "\\src",
     "\\src\\app",
     "\\src\\app\\booking",
