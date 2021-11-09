@@ -41,10 +41,10 @@
     </mat-form-field>
 
     <mat-form-field class="formField">
-      <input type="text"
+      <input type="number"  min="0" max="100" step="1"
         matInput
         formControlName="weekendSurcharge"
-        placeholder="Weekend Surcharge">
+        placeholder="Weekend Surcharge as percent">
     </mat-form-field>
 
     <mat-form-field class="formField">
@@ -53,6 +53,8 @@
         <mat-option *ngFor="let amenity of amenities" [value]="amenity">{{amenity}}</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <button mat-raised-button color="accent" type="submit">Submit Hotel</button>
 
   </form>
 </mat-card>

@@ -35,7 +35,8 @@ import { BookingpopupComponent } from './booking/newbook/bookingpopup/bookingpop
 import { ManagebooklistComponent } from './booking/managebook/managebooklist/managebooklist.component';
 import { ManagebooklistItemComponent } from './booking/managebook/managebooklist/managebooklist-item/managebooklist-item.component';
 import { AdminComponent } from './user/admin/admin.component';
-import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.component'
+import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.component';
+import { AddManagerComponent } from './user/add-manager/add-manager.component'
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.compone
     ManagebooklistItemComponent,
     AdminComponent,
     CreateHotelComponent,
+    AddManagerComponent,
   ],
   imports: [
     BrowserModule,
