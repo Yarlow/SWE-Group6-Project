@@ -20,11 +20,11 @@ export class AuthGuard implements CanActivate {
     if (!isAuth) {
       this.router.navigate(['/login']) // maybe change this...
     }
-    if (state.url == "/admin"){
-      if (this.userService.getRole() !== "admin"){
-        this.router.navigate(['/account']) // maybe change this...
-      }
-    }
+    // if (state.url == "/admin"){
+    //   if (this.userService.getRole() !== "admin"){
+    //     this.router.navigate(['/account']) // maybe change this...
+    //   }
+    // }
     return isAuth;
 
   }

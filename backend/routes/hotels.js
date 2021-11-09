@@ -130,7 +130,6 @@ router.post('', (req, res, next) => {
     name: req.body.name,
     rooms: req.body.rooms,
     amenities: req.body.amenities,
-    managerPassword: "NeedToRemove"
   }
 
   //3 possiblities for pricing. standard, queen, or king.
@@ -139,7 +138,7 @@ router.post('', (req, res, next) => {
       ...hotel,
       price: {
         ...hotel.price,
-        standard: req.body.price.standard
+        standard: req.body.price.standard.replace('$', "")
       }
     }
   }
@@ -148,7 +147,7 @@ router.post('', (req, res, next) => {
       ...hotel,
       price: {
         ...hotel.price,
-        queen: req.body.price.queen
+        queen: req.body.price.queen.replace('$', "")
       }
     }
   }
@@ -157,7 +156,7 @@ router.post('', (req, res, next) => {
       ...hotel,
       price: {
         ...hotel.price,
-        king: req.body.price.king
+        king: req.body.price.king.replace('$', "")
       }
     }
   }
