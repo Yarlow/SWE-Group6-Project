@@ -1,9 +1,31 @@
 const express = require("express")
+const { check, validationResult } = require('express-validator')
+var passwordValidator = require('password-validator');
 const User = require("../models/user")
 const Reservation = require("../models/reservation")
 const Hotel = require("../models/hotel")
 const jwt = require("jsonwebtoken")
 const router = express.Router()
+
+var usernameSchema = new passwordValidator()
+var passwordSchema = new passwordValidator()
+
+//username validation
+usernameSchema
+  .is().min(6)
+  .is().max(25)
+  .has().not().spaces()
+
+//password validation
+passwordSchema
+  .is().min(6)
+  .is().max(25)
+  .has().uppercase()
+  .has().lowercase()
+  .has().digits(1)
+  .has().not().spaces()
+  //regex for special characters, one of these must be in pw
+  .has(/[!$?+-]/)
 
 router.get('/new', (req, res, next) => {
   const user = new User({
@@ -23,35 +45,35 @@ router.get('/new', (req, res, next) => {
 })
 
 router.post('', (req, res, next) => {
-  if (req.body.hotelKey){
-    let hotel = null
-    console.log("Hotel Key Attempt")
-    Hotel.find({managerPassword: req.body.hotelKey}).then(foundHotel => {
-      if (!foundHotel){
-        return res.status(404).json({
-          message: "Hotel Not Found"
-        })
-      }
-      hotel = foundHotel
-      console.log(foundHotel)
+
+  console.log("username: " + req.body.username)
+  console.log("password: " + req.body.password)
+  const usernameCheck = usernameSchema.validate(req.body.username)
+  const passwordCheck = passwordSchema.validate(req.body.password)
+
+  console.log("DOES THE USERNAME PASS? " + usernameCheck)
+  console.log("DOES THE PASSWORD PASS? " + passwordCheck)
+  
+  //if username and password are valid
+  if (usernameCheck && passwordCheck) {
+
+    //create user object from request data
+    const user = new User({
+      username: req.body.username,
+      password: req.body.password
+    })
+    //save user into database
+    user.save().then(createdUser => {
+      res.status(201).json({
+        message: "Made user",
+        userId: createdUser._id
+      })
+    })
+  } else {
+    res.status(400).json({
+      message: "check form data"
     })
   }
-  console.log(req.body)
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password
-  })
-
-  user.save().then(createdUser => {
-    res.status(201).json({
-      message: "Made user",
-      userId: createdUser._id
-    })
-  }).catch( err => {
-    res.status(500).json({
-      error: err
-    })
-  })
 })
 
 router.post('/login', (req, res, next) => {
