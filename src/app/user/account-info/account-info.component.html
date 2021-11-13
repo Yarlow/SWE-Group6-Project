@@ -1,10 +1,22 @@
 <div class="wrapper">
   <mat-card>
     <h1>Hi {{ user.username }}</h1>
-    <div *ngIf="user.role == 'admin'">
-      <a routerLink="/admin"><button mat-raised-button color="primary">Admin Features</button></a>
+    <div class="row justify-content-between">
+      <div class="col-md-3">
+        <a href="/account/edit"><button mat-raised-button color="accent">Edit account</button></a>
+
+      </div>
+      <div class="col-md-3">
+        <div *ngIf="user.role == 'admin'">
+          <a routerLink="/admin"><button mat-raised-button color="primary">Admin Features</button></a>
+        </div>
+
+      </div>
+
     </div>
   </mat-card>
+
+
 
   <div style="margin-top: 100px;">
     <app-managebooklist></app-managebooklist>

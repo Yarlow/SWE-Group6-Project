@@ -1,0 +1,33 @@
+<div class="wrapper">
+  <h1>Change your password</h1>
+
+  <mat-card>
+    <form (submit)="onChangePassword()" [formGroup]="changePasswordForm">
+      <mat-form-field class="formField">
+        <input
+        type="password"
+        matInput
+        formControlName="currentPassword"
+        placeholder="Enter your old password">
+      </mat-form-field>
+
+      <mat-form-field class="formField">
+        <input
+        type="password"
+        matInput
+        formControlName="newPassword"
+        placeholder="Enter a new password">
+      </mat-form-field>
+
+      <mat-form-field class="formField">
+        <input
+        type="password"
+        matInput
+        formControlName="confirmNewPassword"
+        placeholder="Confirm the new password">
+      </mat-form-field>
+
+      <button mat-button color="primary">Change Password</button>
+    </form>
+  </mat-card>
+</div>

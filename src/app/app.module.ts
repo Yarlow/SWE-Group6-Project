@@ -36,7 +36,8 @@ import { ManagebooklistComponent } from './booking/managebook/managebooklist/man
 import { ManagebooklistItemComponent } from './booking/managebook/managebooklist/managebooklist-item/managebooklist-item.component';
 import { AdminComponent } from './user/admin/admin.component';
 import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.component';
-import { AddManagerComponent } from './user/add-manager/add-manager.component'
+import { AddManagerComponent } from './user/add-manager/add-manager.component';
+import { EditAccountComponent } from './user/account-info/edit-account/edit-account.component'
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { AddManagerComponent } from './user/add-manager/add-manager.component'
     AdminComponent,
     CreateHotelComponent,
     AddManagerComponent,
+    EditAccountComponent,
   ],
   imports: [
     BrowserModule,

@@ -22,7 +22,8 @@ export class CreateHotelComponent implements OnInit {
       'queenPrice': new FormControl(),
       'kingPrice': new FormControl(),
       'weekendSurcharge': new FormControl(null, {validators: [Validators.required]}),
-      'selectedAmenities': new FormControl(null, {validators: [Validators.required]})
+      'selectedAmenities': new FormControl(null, {validators: [Validators.required]}),
+      'standardNum': new FormControl(0, null)
     })
   }
 

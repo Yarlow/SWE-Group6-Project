@@ -4,6 +4,8 @@ const Hotel = require("../models/hotel")
 const User = require("../models/user")
 const reservation = require("../models/reservation")
 const Room = require("../models/room")
+const days = 1000 * 60 * 60 * 24
+const reqDays = []
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const router = express.Router()
@@ -101,10 +103,44 @@ router.get('/:RoomId', (req, res, next) => {
  * Delete a Reservation in the database. Added some error checking.
  * Response 404 indicates server cant find requested resource.
  */
-router.delete('/:id', (req, res, next) => {
+ router.delete('/:id', (req, res, next) => {
   console.log("res being passed in: " + req.params.id)
-  Reservation.findByIdAndRemove(req.params.id).then(FoundReservation => {
+  Reservation.findByIdAndRemove(req.params.id).populate('room').then(FoundReservation => {
     console.log("what was saved into variable: " + FoundReservation)
+    //convert start and end dates to date objects
+    var start = new Date(FoundReservation.startDate)
+    var end = new Date(FoundReservation.endDate)
+
+    //calculate the number of days requested by the user
+    var difference = end - start
+    const numOfDays = Math.floor(difference / days) + 1
+    console.log("Number of days requested by user: " + numOfDays)
+
+    //iterate through dates and add them to the requested dates array
+    while (difference != 0) {
+      reqDays.push(new Date(start))
+      difference = end - start
+      start.setDate(start.getDate() + 1)
+    }
+
+    room = FoundReservation.room
+    console.log("BEFORE DELETE BOKEOND")
+    console.log(room)
+
+
+    for (i = 0; i <= numOfDays; i++) {
+      roomBookedOn.delete(reqDays[i])
+    }
+
+    room.bookedOn = roomBookedOn
+
+    console.log("After DELETE BOKEOND")
+
+
+    console.log(room)
+
+
+    room.save()
     //if reservation is not in the db
     if (FoundReservation == null) {
       res.status(404).json({
