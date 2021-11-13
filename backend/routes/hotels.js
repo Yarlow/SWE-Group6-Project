@@ -7,6 +7,30 @@ const Hotel = require("../models/hotel")
 const Room = require("../models/room")
 const router = express.Router()
 
+
+/*
+ * This function takes a hotel objectId and uses it to query 
+ * for the correspoing hotel. If found, 200 response, else 404.
+*/
+
+router.get('/:id', (req, res) => {
+
+  //mongoose calls .then() function if a hotel is found, if not an error is thrown and caught at the end of this function
+  Hotel.findById(req.params.id).then(foundHotel => {
+
+    res.status(200).json({
+      hotel: foundHotel
+    })
+
+  }).catch(err => {
+
+    res.status(404).json({
+      //no body required
+    })
+
+  })
+})
+
 /*
  * get list of  existing hotels.
  */
@@ -22,6 +46,7 @@ router.get('', (req, res, next) => {
 
 /*
  * Search hotels
+ * to-do: Incorporate date range into the search query. 
  */
 router.get('/search', (req, res, next) => {
   // console.log(req.query)
@@ -201,6 +226,65 @@ router.post('', (req, res, next) => {
 
 })
 
+router.patch('/edithotel', (req, res, next) => {
 
+  /* From the examples I am finding online, findByIdAndUpdate works if you know what will be changing prior to the function call so I am going
+   * to use findOne and compare values for now. I am going to assume that all fields will be sent in the request, but only the changed fields will
+   * be different than what they were previous to the request. I can definitely refactor in the future, just want to have something that works.*/
+
+  Hotel.findOne({ _id: req.body.id }, function (err, foundDoc) {
+
+    if (err) {
+      console.log("something went fooking wrong")
+    }
+    else {
+      console.log("king price: " + foundDoc.price.king)
+      //compare fields. Change document if field has changed.
+      if (foundDoc.name != req.body.name) {
+        console.log("user would like to change the hotel name to: " + req.body.name)
+        foundDoc.name = req.body.name
+      }
+      //what happens to exising rooms when we change this?
+      if (foundDoc.rooms != req.body.rooms) {
+        console.log("user would like to change the number of rooms to: " + req.body.rooms)
+        foundDoc.rooms = req.body.rooms
+      }
+      if (foundDoc.price.standard != req.body.price.standard) {
+        console.log("user would like to change standard room price to: " + req.body.price.standard)
+        foundDoc.price.standard = req.body.price.standard
+      }
+      if (foundDoc.price.queen != req.body.price.queen) {
+        console.log("user would like to change queen room price to: " + req.body.price.queen)
+        foundDoc.price.queen = req.body.price.queen
+      }
+      if (foundDoc.price.king != req.body.price.king) {
+        console.log("user would like to change king room price to: " + req.body.price.king)
+        foundDoc.price.king = req.body.price.king
+      }
+      if (foundDoc.price.weekendSurcharge != req.body.price.weekendSurcharge) {
+        console.log("user would like to change weekend surcharge to: " + req.body.price.weekendSurcharge)
+        foundDoc.price.weekendSurcharge = req.body.price.weekendSurcharge
+      }
+      //this is not a valid way to compare arrays, does not work but will fix in future
+      if (foundDoc.amenities != req.body.amenities) {
+        console.log("user would like to change amenities to: " + req.body.amenities)
+        foundDoc.amenities = req.body.amenities
+      }
+      if (foundDoc.managerPassword != req.body.managerPassword) {
+        console.log("user would like to change the manager password to: " + req.body.managerPassword)
+        foundDoc.managerPassword = req.body.managerPassword
+      }
+
+      //save changes made to the document
+      foundDoc.save()
+    }
+    //respond to request
+    res.status(200).json({
+      message: "found reservation",
+      name: foundDoc.name,
+
+    })
+  })
+})
 
 module.exports = router
