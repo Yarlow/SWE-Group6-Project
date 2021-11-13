@@ -20,6 +20,16 @@
       </mat-select>
     </mat-form-field>
 
+    <mat-form-field appearance="fill">
+      <mat-label>Availability Range</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Start date" formControlName="startDate">
+        <input matEndDate placeholder="End date" formControlName="endDate">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
     <!-- <p style="">Weekday Price Per Night</p> -->
     <!-- <div>
       <button mat-raised-button (click)="showWeekdaySlider = !showWeekdaySlider" color="accent">Weekday Price</button>
