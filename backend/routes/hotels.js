@@ -7,6 +7,30 @@ const Hotel = require("../models/hotel")
 const Room = require("../models/room")
 const router = express.Router()
 
+
+/*
+ * This function takes a hotel objectId and uses it to query 
+ * for the correspoing hotel. If found, 200 response, else 404.
+*/
+
+router.get('/:id', (req, res) => {
+
+  //mongoose calls .then() function if a hotel is found, if not an error is thrown and caught at the end of this function
+  Hotel.findById(req.params.id).then(foundHotel => {
+
+    res.status(200).json({
+      hotel: foundHotel
+    })
+
+  }).catch(err => {
+
+    res.status(404).json({
+      //no body required
+    })
+
+  })
+})
+
 /*
  * get list of  existing hotels.
  */
@@ -22,6 +46,7 @@ router.get('', (req, res, next) => {
 
 /*
  * Search hotels
+ * to-do: Incorporate date range into the search query. 
  */
 router.get('/search', (req, res, next) => {
   // console.log(req.query)

@@ -79,7 +79,6 @@ router.post('', (req, res, next) => {
         message: "Reservation created and room bookedOn updated"
       })
     }
-
   })
 })
 

@@ -3,7 +3,6 @@
     "",
     "\\backend",
     "\\backend\\routes",
-    "\\src",
     "\\src\\app",
     "\\src\\app\\booking",
     "\\src\\app\\booking\\managebook",
