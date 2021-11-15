@@ -213,7 +213,9 @@ router.post('', (req, res, next) => {
         })
       }).catch(unFoundUsers => {
         return res.status(200).json({
-          message: "hotel created, but some users don't exist"
+          message: "managers don't exist",
+          createdHotel,
+          unFoundUsers
         })
       })
     } else {

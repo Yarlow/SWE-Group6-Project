@@ -4,7 +4,7 @@ import { HotelService } from 'src/app/service/hotel.service';
 import { Hotel } from '../hotel.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserService } from 'src/app/service/user.service';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-create-hotel',
@@ -18,7 +18,7 @@ export class CreateHotelComponent implements OnInit {
   hotelId: string
 
 
-  constructor( private hotelService: HotelService, public route: ActivatedRoute, private userService: UserService ) { }
+  constructor( private hotelService: HotelService, public route: ActivatedRoute, private userService: UserService, private snackBar: MatSnackBar ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -68,6 +68,11 @@ export class CreateHotelComponent implements OnInit {
   onCreateHotel() {
     if (this.createHotelForm.invalid){
       return
+    }
+    if (!this.createHotelForm.value.standardPrice && !this.createHotelForm.value.queenPrice && !this.createHotelForm.value.kingPrice) {
+        this.snackBar.open("Must have at least one price", "X")
+
+        return
     }
     let hotel= {
       name: this.createHotelForm.value.hotelName,
