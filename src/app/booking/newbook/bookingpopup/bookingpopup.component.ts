@@ -15,7 +15,7 @@ export class BookingpopupComponent implements OnInit {
 
   selectedHotel: Hotel
   bookingForm: FormGroup;
-  pricesToDisplay: any;
+  pricesToDisplay = {}
   weekendSurcharge: number;
   resPrice: number;
   actionText: string;
@@ -35,8 +35,22 @@ export class BookingpopupComponent implements OnInit {
     console.log("Booking init");
     this.selectedHotel = this.data.hotel;
     this.weekendSurcharge = this.selectedHotel.price.weekendSurcharge;
-    this.pricesToDisplay = delete this.selectedHotel.price['weekendSurcharge']
+    // this.pricesToDisplay = this.selectedHotel.price
     console.log(this.pricesToDisplay)
+    // delete this.pricesToDisplay['weekendSurcharge']
+    console.log(this.pricesToDisplay)
+
+    if (this.selectedHotel.price.standard){
+      this.pricesToDisplay['standard'] = this.selectedHotel.price.standard
+    }
+    if (this.selectedHotel.price.queen){
+      this.pricesToDisplay['queen'] = this.selectedHotel.price.queen
+    }
+    if (this.selectedHotel.price.king){
+      this.pricesToDisplay['king'] = this.selectedHotel.price.king
+    }
+    console.log(this.pricesToDisplay)
+
     this.actionText = this.data.reservation ? "Update Reservation" : "Book Reservation"
     this.mode = this.data.reservation ? "Edit" : "Create"
     if (this.data.reservation){

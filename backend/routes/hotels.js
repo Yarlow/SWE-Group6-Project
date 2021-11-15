@@ -49,14 +49,20 @@ router.get('', (req, res, next) => {
     })
     console.log("hotels have been fetched")
   })
-} )
+})
+
+
+router.get('/test', (req,res,next) => {
+  res.status(200).json({message:"Fuck"})
+})
 
 /*
  * Search hotels
  * to-do: Incorporate date range into the search query.
  */
-router.get('/search', (req, res, next) => {
-  // console.log(req.query)
+router.get('/search/filter', (req, res, next) => {
+  // res.status(200).json({message:"Fuck You"})
+  console.log("Hey fucker")
   var query = Hotel.find()
   // console.log('bed choice ' + req.query.bed)
   if (req.query.hotelName){
@@ -420,6 +426,21 @@ router.patch('/edithotel', (req, res, next) => {
 
     })
   })
+})
+
+router.get('/search/manager', (req, res, next) => {
+  console.log('res received')
+  let query = Hotel.find();
+  let hotelIds = req.query.hotelId
+  console.log(hotelIds)
+  query.where('_id').in(req.query.amenities)
+  query.exec().then(hotels => {
+    console.log(hotels)
+    res.status(200).json({
+      hotels: hotels
+    })
+  })
+
 })
 
 module.exports = router

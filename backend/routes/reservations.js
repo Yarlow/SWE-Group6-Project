@@ -225,5 +225,8 @@ router.patch('/:id', (req, res, next) => {
   }
   */
 
+router.get('/test/please/work', (req, res, next) => {
+  console.log("WTF")
+})
 
 module.exports = router

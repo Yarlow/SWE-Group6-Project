@@ -13,7 +13,7 @@
   <mat-form-field>
     <mat-label>Bed Choice</mat-label>
     <mat-select formControlName="selectedPrice" >
-      <mat-option *ngFor="let price of selectedHotel.price | keyvalue" [value]="[price.key, price.value]">{{price.key}}: ${{price.value}}/night</mat-option>
+      <mat-option *ngFor="let price of pricesToDisplay | keyvalue" [value]="[price.key, price.value]">{{price.key}}: ${{price.value}}/night</mat-option>
     </mat-select>
   </mat-form-field>
 

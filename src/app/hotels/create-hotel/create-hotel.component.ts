@@ -5,6 +5,7 @@ import { Hotel } from '../hotel.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserService } from 'src/app/service/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from 'src/app/user/user.model';
 
 @Component({
   selector: 'app-create-hotel',
@@ -39,6 +40,11 @@ export class CreateHotelComponent implements OnInit {
         this.hotelService.getHotelById(this.hotelId).subscribe(hotelData => {
           console.log(hotelData)
           let hotel = hotelData.hotel
+          let managerString = ''
+          for (let manager of hotelData.managers){
+            managerString += manager.username + ', '
+          }
+          console.log('managerString' , managerString)
           this.createHotelForm.patchValue({
             'hotelName': hotel.name,
             'numRooms': hotel.rooms,
@@ -47,7 +53,7 @@ export class CreateHotelComponent implements OnInit {
             'kingPrice': hotel.price.king,
             'weekendSurcharge': hotel.price.weekendSurcharge * 100,
             'selectedAmenities': hotel.amenities,
-            'managers': hotelData.managers
+            'managers': managerString
           })
           this.createHotelForm.get('numRooms').disable()
           if (!hotel.price.standard) {

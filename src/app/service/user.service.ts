@@ -58,7 +58,7 @@ export class UserService {
             this.getSignedInUserInfo()
             // this.getuserInfo()
             // this.setUser(this.getUserInfo(responseData.userId))
-            this.router.navigate(['/']);
+            this.router.navigate(['/account']);
           }
           resolve(responseData.message);
         }, (errorResponse) => {
@@ -170,7 +170,7 @@ export class UserService {
   }
 
   getRole(){
-    console.log(this.user.role)
+    // console.log(this.user.role)
     return this.user.role;
   }
 

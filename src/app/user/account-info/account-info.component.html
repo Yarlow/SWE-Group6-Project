@@ -10,6 +10,9 @@
         <div *ngIf="user.role == 'admin'">
           <a routerLink="/admin"><button mat-raised-button color="primary">Admin Features</button></a>
         </div>
+        <div *ngIf="user.managerOf.length > 0">
+          <a routerLink="/hotel/manager"><button mat-raised-button color="primary">Hotel Manager Features</button></a>
+        </div>
 
       </div>
 
