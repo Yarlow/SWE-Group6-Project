@@ -1,9 +1,11 @@
 <div class="container">
-  <h2>Create Hotel</h2>
-  <app-create-hotel></app-create-hotel>
-  <div style="margin-top: 20px;"></div>
-  <h2>Add Manager To Hotel</h2>
-  <app-add-manager></app-add-manager>
+  <h2>Hotel Management</h2>
+  <div class="hotelManagementContainer">
+      <a routerLink="/hotel/create">
+          <button mat-raised-button color="primary">Create Hotel</button>
+      </a>
+      <a routerLink="/hotel/edit">
+          <button mat-raised-button color="accent">Edit Hotels</button>
+      </a>
+  </div>
 </div>
-
-<a routerLink="/hotel/edit">Edit hotel</a>

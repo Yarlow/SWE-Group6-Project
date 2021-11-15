@@ -50,6 +50,10 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'hotel/create',
+    component: CreateHotelComponent  
+  },
+  {
     path: 'hotel/edit',
     component: HotelListComponent,
   },
