@@ -3,7 +3,7 @@
     <h1>Hi {{ user.username }}</h1>
     <div class="row justify-content-between">
       <div class="col-md-3">
-        <a href="/account/edit"><button mat-raised-button color="accent">Edit account</button></a>
+        <a routerLink="/account/edit"><button mat-raised-button color="accent">Edit account</button></a>
 
       </div>
       <div class="col-md-3">
@@ -15,8 +15,6 @@
 
     </div>
   </mat-card>
-
-
 
   <div style="margin-top: 100px;">
     <app-managebooklist></app-managebooklist>

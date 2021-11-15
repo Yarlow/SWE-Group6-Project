@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ManagebookComponent } from './booking/managebook/managebook.component';
 import { NewbookComponent } from './booking/newbook/newbook.component';
 import { HomeComponent } from './home/home.component';
+import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.component';
+import { HotelListComponent } from './hotels/hotel-list/hotel-list.component';
 import { AuthGuard } from './service/auth.guard';
 import { AccountInfoComponent } from './user/account-info/account-info.component';
 import { EditAccountComponent } from './user/account-info/edit-account/edit-account.component';
@@ -46,7 +48,16 @@ const routes: Routes = [
     path: 'account/edit',
     component: EditAccountComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'hotel/edit',
+    component: HotelListComponent,
+  },
+  {
+    path: 'hotel/edit/:hotelId',
+    component: CreateHotelComponent
   }
+
 ];
 
 @NgModule({

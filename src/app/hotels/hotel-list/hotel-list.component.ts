@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { HotelService } from 'src/app/service/hotel.service';
+import { UserService } from 'src/app/service/user.service';
+import { User } from 'src/app/user/user.model';
 import { Hotel } from '../hotel.model';
 
 @Component({

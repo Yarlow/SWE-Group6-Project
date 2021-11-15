@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Hotel } from '../../hotel.model';
 import { ReservationService } from 'src/app/service/reservation.service';
+import { UserService } from 'src/app/service/user.service';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-hotel-list-item',
@@ -10,18 +12,32 @@ import { ReservationService } from 'src/app/service/reservation.service';
 export class HotelListItemComponent implements OnInit {
 
   @Input() hotelElement: Hotel;
+  @Input() userRole: string;
 
-  constructor(private reservationService: ReservationService) { }
+  mode: string = 'reservation';
+  currentRoute: string;
+
+  constructor(private reservationService: ReservationService, private router: Router) { }
 
   ngOnInit(): void {
-    console.log("HOTEL " + this.hotelElement)
+    // console.log("HOTEL " + this.hotelElement)
+
+    if (this.router.url.includes('hotel/edit')) {
+      this.mode = 'edit'
+      console.log(this.mode)
+    }
   }
 
   onStartBook() {
-    let data = {
-      hotel: this.hotelElement
+    if (this.mode === 'reservation') {
+      let data = {
+        hotel: this.hotelElement
+      }
+      this.reservationService.openBookingPopup(data)
+    } else if (this.mode === 'edit') {
+      this.router.navigate(['hotel/edit', this.hotelElement._id])
     }
-    this.reservationService.openBookingPopup(data)
+
     // const dialogRef = this.dialog.open(BookingpopupComponent, {
     //   data: {
     //     hotel: this.hotelElement

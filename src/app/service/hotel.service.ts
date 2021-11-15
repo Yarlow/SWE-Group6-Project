@@ -53,6 +53,11 @@ export class HotelService {
     // })
   }
 
+  getHotelById(hotelId) {
+    console.log("Requesting")
+    return this.http.get<{hotel: Hotel, managers: string[]}>('http://localhost:3000/api/hotels/' + hotelId)
+  }
+
 
   getHotelUpdateListener() {
     return this.hotelsUpdated.asObservable()
@@ -75,10 +80,18 @@ export class HotelService {
     // this.hotelsUpdated.next([...this.hotelsForView])
   }
 
-  createHotel(hotel){
-    this.http.post<{message: string}>('http://localhost:3000/api/hotels', hotel).subscribe(responseData => {
+  createHotel(hotel, managerUsernames){
+    let body = {
+      hotel,
+      managerUsernames
+    }
+    this.http.post<{message: string}>('http://localhost:3000/api/hotels', body).subscribe(responseData => {
       console.log(responseData)
     })
+  }
+
+  editHotel(hotel, managerUsernames) {
+
   }
 
 }

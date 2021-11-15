@@ -13,7 +13,7 @@ var passwordSchema = new passwordValidator()
 /*
  *These two schemas will be used for form input validation. We do not want to just
  * accept anything and store in the database.
- */ 
+ */
 //username validation
 usernameSchema
   .is().min(6)
@@ -24,12 +24,12 @@ usernameSchema
 passwordSchema
   .is().min(6)
   .is().max(25)
-  .has().uppercase()
-  .has().lowercase()
-  .has().digits(1)
-  .has().not().spaces()
-  //regex for special characters, one of these must be in pw
-  .has(/[!$?+]/)
+  // .has().uppercase()
+  // .has().lowercase()
+  // .has().digits(1)
+  // .has().not().spaces()
+  // //regex for special characters, one of these must be in pw
+  // .has(/[!$?+]/)
 
 router.get('/new', (req, res, next) => {
   const user = new User({
@@ -52,7 +52,7 @@ router.post('', (req, res, next) => {
 
   const usernameCheck = usernameSchema.validate(req.body.username)
   const passwordCheck = passwordSchema.validate(req.body.password)
-  
+
   //if username and password are valid
   if (usernameCheck && passwordCheck) {
 
@@ -78,10 +78,10 @@ router.post('', (req, res, next) => {
 /*
  *This function takes login credentials from the user and
  * checks in database to see if they exist.
- */ 
+ */
 router.post('/login', (req, res, next) => {
   console.log(req.body)
-  //create query 
+  //create query
   const insensitiveQuery = { username: { $regex: new RegExp(`^${req.body.username}$`), $options: 'i' } }
 
   //user query to find a match in the database
@@ -94,7 +94,7 @@ router.post('/login', (req, res, next) => {
     }
     //if user is found and the passwords match up, then enter this block
     if (foundUser.password == req.body.password) {
-      //create a token 
+      //create a token
       const token = jwt.sign(
         {username: foundUser.username, userId: foundUser._id, role: foundUser.role},
         'secret_passphrase',
@@ -102,7 +102,7 @@ router.post('/login', (req, res, next) => {
 
       console.log("Login success")
       console.log(foundUser)
-      
+
       console.log("User Id " + foundUser._id)
       //200 response for successful login. Note token is included in response
       res.status(200).json({
@@ -200,7 +200,7 @@ router.delete('/:id', (req, res, next) => {
 
 
 /*
- * This function allows a user to reset their password. 
+ * This function allows a user to reset their password.
  */
 
 router.patch('/editaccount', (req, res,) => {
@@ -215,7 +215,7 @@ router.patch('/editaccount', (req, res,) => {
       res.status(200).json({
         message: "ok"
       })
-      //if passwords do not match respond with 401 unautorized 
+      //if passwords do not match respond with 401 unautorized
     } else {
       res.status(401).json({
         //no body required
