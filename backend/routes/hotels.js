@@ -6,10 +6,10 @@ const express = require("express")
 const Hotel = require("../models/hotel")
 const Room = require("../models/room")
 const router = express.Router()
-
+const User = require("../models/user")
 
 /*
- * This function takes a hotel objectId and uses it to query 
+ * This function takes a hotel objectId and uses it to query
  * for the correspoing hotel. If found, 200 response, else 404.
 */
 
@@ -17,9 +17,16 @@ router.get('/:id', (req, res) => {
 
   //mongoose calls .then() function if a hotel is found, if not an error is thrown and caught at the end of this function
   Hotel.findById(req.params.id).then(foundHotel => {
+    User.find().where('managerOf').in(foundHotel._id).exec().then(foundUsers => {
+      res.status(200).json({
+        hotel: foundHotel,
+        managers: foundUsers
+      })
 
-    res.status(200).json({
-      hotel: foundHotel
+    }).catch(err => {
+      res.status(200).json({
+        hotel: foundHotel
+      })
     })
 
   }).catch(err => {
@@ -46,12 +53,12 @@ router.get('', (req, res, next) => {
 
 /*
  * Search hotels
- * to-do: Incorporate date range into the search query. 
+ * to-do: Incorporate date range into the search query.
  */
 router.get('/search', (req, res, next) => {
   // console.log(req.query)
   var query = Hotel.find()
-  console.log('bed choice ' + req.query.bed)
+  // console.log('bed choice ' + req.query.bed)
   if (req.query.hotelName){
 
 
@@ -147,46 +154,47 @@ router.get('/search', (req, res, next) => {
  */
 router.post('', (req, res, next) => {
   //get JSON request data and save into local variables
+  // console.log(req.body)
   let hotel = {
-    name: req.body.name,
-    rooms: req.body.rooms,
-    amenities: req.body.amenities,
+    name: req.body.hotel.name,
+    rooms: req.body.hotel.rooms,
+    amenities:req.body.hotel.amenities,
   }
 
   //3 possiblities for pricing. standard, queen, or king.
-  if (req.body.price.standard){
+  if (req.body.hotel.price.standard){
     hotel = {
       ...hotel,
       price: {
         ...hotel.price,
-        standard: req.body.price.standard.replace('$', "")
+        standard: req.body.hotel.price.standard.replace('$', "")
       }
     }
   }
-  if (req.body.price.queen) {
+  if (req.body.hotel.price.queen) {
     hotel = {
       ...hotel,
       price: {
         ...hotel.price,
-        queen: req.body.price.queen.replace('$', "")
+        queen: req.body.hotel.price.queen.replace('$', "")
       }
     }
   }
-  if (req.body.price.king) {
+  if (req.body.hotel.price.king) {
     hotel = {
       ...hotel,
       price: {
         ...hotel.price,
-        king: req.body.price.king.replace('$', "")
+        king: req.body.hotel.price.king.replace('$', "")
       }
     }
   }
-  if (req.body.price.weekendSurcharge) {
+  if (req.body.hotel.price.weekendSurcharge) {
     hotel = {
       ...hotel,
       price: {
         ...hotel.price,
-        weekendSurcharge: req.body.price.weekendSurcharge
+        weekendSurcharge: req.body.hotel.price.weekendSurcharge
       }
     }
   }
@@ -194,37 +202,162 @@ router.post('', (req, res, next) => {
   //Create the hotel based on the request data and save to db
   const hotelObj = new Hotel(hotel)
   hotelObj.save().then(createdHotel => {
-    let numStandard = createdHotel.rooms * 0.5;
-    let numQueen = createdHotel.rooms * 0.3;
-    let numKing = createdHotel.rooms * 0.2;
-    const standardRoom = {
-      hotel: createdHotel._id,
-      roomType: "standard",
+
+    createRooms(createdHotel)
+
+
+    if (req.body.managerUsernames) {
+      addManagersToHotel(req.body.managerUsernames, createdHotel._id).then(() => {
+        return res.status(200).json({
+          message: "noice"
+        })
+      }).catch(unFoundUsers => {
+        return res.status(200).json({
+          message: "hotel created, but some users don't exist"
+        })
+      })
+    } else {
+      return res.status(200).json({message: "noice"});
+
     }
-    const queenRoom ={
-      hotel: createdHotel._id,
-      roomType: "queen",
-    }
-    const kingRoom = {
-      hotel: createdHotel._id,
-      roomType: "king",
-    }
-    for (; numStandard > 0; numStandard--){
-      let standRoomObj = new Room(standardRoom)
-      standRoomObj.save()
-    }
-    for (; numQueen > 0; numQueen--){
-      let queenRoomObj = new Room(queenRoom)
-      queenRoomObj.save()
-    }
-    for (; numKing > 0; numKing--){
-      let kingRoomObj = new Room(kingRoom)
-      kingRoomObj.save()
-    }
-    return res.status(200).json({message: "noice"});
+
   })
 
 })
+
+function createRooms(createdHotel) {
+  const hotelId = createdHotel._id;
+  const numTotalRooms = createdHotel.rooms
+  let countOfRoomTypes = 0
+  countOfRoomTypes = createdHotel.price.standard ? ++countOfRoomTypes : countOfRoomTypes;
+  countOfRoomTypes = createdHotel.price.queen ? ++countOfRoomTypes : countOfRoomTypes;
+  countOfRoomTypes = createdHotel.price.king ? ++countOfRoomTypes : countOfRoomTypes;
+  console.log(createdHotel)
+
+  let rooms = createdHotel.price;
+  console.log("rooms" ,rooms)
+  delete rooms['weekendSurcharge'];
+  console.log(rooms)
+
+  let roomTypes = Object.keys(rooms);
+
+  let roomTypesFix = []
+  // for some reason. Object.keys() gives me all of the Model's object, even though what was passed in doesn't have the field
+  // so i gotsta get tricky
+  for (room of roomTypes) {
+    if (rooms[room]) {
+      roomTypesFix.push(room)
+    }
+  }
+
+  roomTypes = roomTypesFix
+
+  console.log("roomTypes")
+  console.log(roomTypes)
+
+  const sortRoomsBy = {
+    'standard': 0,
+    'queen': 1,
+    'king': 2
+  }
+
+  const sortedRooms = roomTypes.sort((a, b) => {
+    sortRoomsBy[a.state] - sortRoomsBy[b.state]
+  })
+
+  console.log("sortedRoomes")
+  console.log(sortedRooms)
+
+  let roomWeightObject = {}
+  console.log("countOfRoomTypes: ", countOfRoomTypes)
+  if (countOfRoomTypes === 3) {
+    roomWeightObject = {
+      'standard': numTotalRooms * 0.5,
+      'queen': numTotalRooms * 0.3,
+      'king':numTotalRooms * 0.2
+    }
+  } else if (countOfRoomTypes === 2) {
+    roomWeightObject[sortedRooms[0]] = numTotalRooms * 0.5
+    roomWeightObject[sortedRooms[1]] = numTotalRooms * 0.5
+  } else {
+    roomWeightObject[sortedRooms[0]] = numTotalRooms
+  }
+
+  console.log("roomWeightObject")
+  console.log(roomWeightObject)
+
+  for (let roomType of sortedRooms) {
+    let room = {
+      hotel: hotelId,
+      roomType: roomType
+    }
+    console.log(room)
+    console.log(roomWeightObject[roomType])
+    let num = roomWeightObject[roomType]
+    for (; num > 0; num--) {
+      let roomObj = new Room(room);
+      roomObj.save()
+    }
+
+  }
+
+  //
+  //
+  // let numStandard = createdHotel.rooms * 0.5;
+  // let numQueen = createdHotel.rooms * 0.3;
+  // let numKing = createdHotel.rooms * 0.2;
+  // const standardRoom = {
+  //   hotel: createdHotel._id,
+  //   roomType: "standard",
+  // }
+  // const queenRoom ={
+  //   hotel: createdHotel._id,
+  //   roomType: "queen",
+  // }
+  // const kingRoom = {
+  //   hotel: createdHotel._id,
+  //   roomType: "king",
+  // }
+  // for (; numStandard > 0; numStandard--){
+  //   let standRoomObj = new Room(standardRoom)
+  //   standRoomObj.save()
+  // }
+  // for (; numQueen > 0; numQueen--){
+  //   let queenRoomObj = new Room(queenRoom)
+  //   queenRoomObj.save()
+  // }
+  // for (; numKing > 0; numKing--){
+  //   let kingRoomObj = new Room(kingRoom)
+  //   kingRoomObj.save()
+  // }
+
+
+}
+
+async function addManagersToHotel(usernames, hotelId) {
+  return new Promise( async (resolve, reject) => {
+    // check if usernames is NOT an array. if it isn't, turn it into one so i can loop through
+    if (!Array.isArray(usernames)){
+      usernames = [usernames].flat()
+    }
+
+    let unFoundUsers = []
+    for (let username of usernames) {
+      await User.findOne({username: username}).then(foundUser => {
+        console.log(foundUser)
+        foundUser.managerOf.push(hotelId)
+        foundUser.save()
+      }).catch(err => {
+        unFoundUsers.push(username)
+      })
+    }
+    if (!unFoundUsers) {
+      resolve()
+    } else {
+      reject(unFoundUsers)
+    }
+  })
+}
 
 router.patch('/edithotel', (req, res, next) => {
 

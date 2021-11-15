@@ -1,126 +1,99 @@
-<mat-card class="createHotelForm">
-  <form (submit)="onCreateHotel()" [formGroup]="createHotelForm">
-    <mat-form-field class="formField" style="width: 100%">
-      <input
-        type="text"
-        matInput
-        formControlName="hotelName"
-        placeholder="Hotel Name">
-    </mat-form-field>
+<div class="container">
+  <mat-card class="createHotelForm">
+    <form (submit)="onCreateHotel()" [formGroup]="createHotelForm">
 
-    <!-- <mat-form-field class="formField">
-      <input
-        type="number"
-        matInput
-        formControlName="numRooms"
-        placeholder="Total Room Number">
-    </mat-form-field> -->
-
-    <div class="row">
-      <div class="col-md-6">
-        <h2>Standard Rooms</h2>
-        <div class="row">
-          <div class="col-md-6">
-            <mat-form-field class="formField">
-              <input
-              type="text"
-              matInput
-              formControlName="standardPrice"
-              placeholder="Price of Standard Room">
-            </mat-form-field>
-
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="formField">
-              <input
-              type="number"
-              matInput
-              formControlName="standardNum"
-              placeholder="Number of Standard Room">
-            </mat-form-field>
-
-          </div>
+      <div class="row">
+        <div class="col-md-8">
+          <mat-form-field class="formField" style="width: 100%">
+            <input
+            type="text"
+            matInput
+            formControlName="hotelName"
+            placeholder="Hotel Name">
+          </mat-form-field>
         </div>
+        <div class="col-md-2">
+          <mat-form-field class="formField">
+            <input
+            type="number"
+            matInput
+            formControlName="numRooms"
+            placeholder="Total Room Number">
+          </mat-form-field>
 
-
-
-
-      </div>
-
-      <div class="col-md-6">
-        <h2>Queen Rooms</h2>
-
-        <div class="row">
-          <div class="col-md-6">
-            <mat-form-field class="formField">
-              <input
-              type="text"
-              matInput
-              formControlName="queenPrice"
-              placeholder="Price of Queen Room">
-            </mat-form-field>
-
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="formField">
-              <input
-              type="number"
-              matInput
-              formControlName="standardNum"
-              placeholder="Number of Queen Room">
-            </mat-form-field>
-
-          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row align-items-end" >
-      <div class="col-md-6">
-        <h2>King Rooms</h2>
 
-        <div class="row" >
-          <div class="col-md-6">
-            <mat-form-field class="formField">
-              <input
-              type="text"
-              matInput
-              formControlName="kingPrice"
-              placeholder="Price of King Room">
-            </mat-form-field>
 
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="formField">
-              <input
-              type="number"
-              matInput
-              formControlName="standardNum"
-              placeholder="Number of King Room">
-            </mat-form-field>
-          </div>
+      <h3 style="text-align: center;">Room Pricing</h3>
+      <div class="row justify-content-around">
+        <div class="col-md-3">
+          <mat-form-field class="formField">
+            <input
+            type="text"
+            matInput
+            formControlName="standardPrice"
+            placeholder="Price of Standard Room">
+          </mat-form-field>
+
+
+        </div>
+        <div class="col-md-3">
+
+          <mat-form-field class="formField">
+            <input
+            type="text"
+            matInput
+            formControlName="queenPrice"
+            placeholder="Price of Queen Room">
+          </mat-form-field>
+
+
         </div>
       </div>
-      <div class="col-md-6">
-        <mat-form-field class="formField">
-          <input type="number"  min="0" max="100" step="1"
+
+      <div class="row justify-content-around">
+        <div class="col-md-3">
+          <mat-form-field class="formField">
+            <input
+            type="text"
+            matInput
+            formControlName="kingPrice"
+            placeholder="Price of King Room">
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field class="formField">
+            <input type="number"  min="0" max="100" step="1"
             matInput
             formControlName="weekendSurcharge"
             placeholder="Weekend Surcharge as percent">
-        </mat-form-field>
+          </mat-form-field>
+        </div>
       </div>
-    </div>
 
 
 
-    <mat-form-field class="formField">
-      <mat-label>Amenities</mat-label>
-      <mat-select formControlName="selectedAmenities" multiple>
-        <mat-option *ngFor="let amenity of amenities" [value]="amenity">{{amenity}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field class="formField">
+        <mat-label>Amenities</mat-label>
+        <mat-select formControlName="selectedAmenities" multiple>
+          <mat-option *ngFor="let amenity of amenities" [value]="amenity">{{amenity}}</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <button mat-raised-button color="accent" type="submit">Submit Hotel</button>
+      <mat-form-field class="formField">
+        <mat-label>Hotel Manager Usernames (comma separated list)</mat-label>
+        <input
+          matInput
+          formControlName="managers"
+          type="text">
+      </mat-form-field>
 
-  </form>
-</mat-card>
+      <button mat-raised-button color="accent" type="submit">Submit Hotel</button>
+
+    </form>
+  </mat-card>
+
+</div>

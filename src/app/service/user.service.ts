@@ -130,6 +130,8 @@ export class UserService {
     // console.log("DEFAULT???????????")
   }
 
+  getManagersByHotelId(){}
+
   getUserUpdateListener() {
     return this.userUpdated.asObservable()
   }
