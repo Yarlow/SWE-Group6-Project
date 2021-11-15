@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Hotel } from '../hotels/hotel.model';
-
+import { Router } from '@angular/router';
 
 import { map } from 'rxjs/operators'
 import { HttpClient, HttpParams } from '@angular/common/http'
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class HotelService {
 
   private hotelsUpdated = new Subject<Hotel[]>()
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private router: Router) { }
 
 
   getHotels() {
@@ -85,8 +86,15 @@ export class HotelService {
       hotel,
       managerUsernames
     }
-    this.http.post<{message: string}>('http://localhost:3000/api/hotels', body).subscribe(responseData => {
+    this.http.post<{message: string, unFoundUsers: string[], createdHotel: Hotel}>('http://localhost:3000/api/hotels', body).subscribe(responseData => {
       console.log(responseData)
+      if (responseData.unFoundUsers) {
+          this.snackBar.open('Hotel Created - but some requested users dont exist: ' + responseData.unFoundUsers, 'X');
+          this.router.navigate(['hotel/edit', responseData.createdHotel._id])
+      } else {
+          this.snackBar.open('Hotel Created: ' + responseData.unFoundUsers, 'X');
+          this.router.navigate(['/account'])
+      }
     })
   }
 
