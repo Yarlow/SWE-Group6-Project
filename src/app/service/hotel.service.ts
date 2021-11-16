@@ -62,7 +62,7 @@ export class HotelService {
 
   getHotelById(hotelId) {
     console.log("Requesting")
-    return this.http.get<{hotel: Hotel, managers: User[]}>('http://localhost:3000/api/hotels/' + hotelId)
+    return this.http.get<{hotel: Hotel, managers: User[]}>('http://localhost:3000/api/hotels/search/one/' + hotelId)
   }
 
 
@@ -109,8 +109,26 @@ export class HotelService {
     })
   }
 
-  editHotel(hotel, managerUsernames) {
-
+  editHotel(hotel, managerUsernames, hotelId) {
+    let body = {
+      hotel,
+      managerUsernames,
+      hotelId
+    }
+    this.http.patch<{message: string, error: Error, }>('http://localhost:3000/api/hotels', body).subscribe(responseData => {
+      if (responseData.message === 'success') {
+        this.snackBar.open('Hotel Edited Successfully', 'X')
+        let role = this.userService.getRole();
+        if (role === 'admin'){
+          this.snackBar.open('Hotel Edited', 'X');
+          this.router.navigate(['/hotel/edit'])
+        } else {
+          this.snackBar.open('Hotel Edited', 'X');
+          this.router.navigate(['/hotel/manager'])
+        }
+      }
+      console.log(responseData)
+    })
   }
 
   getManagerHotels() {

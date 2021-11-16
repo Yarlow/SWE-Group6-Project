@@ -22,7 +22,7 @@ export class HotelListItemComponent implements OnInit {
   ngOnInit(): void {
     // console.log("HOTEL " + this.hotelElement)
 
-    if (this.router.url.includes('hotel/edit')) {
+    if (this.router.url.includes('hotel/edit') || this.router.url.includes('hotel/manager')) {
       this.mode = 'edit'
       console.log(this.mode)
     }

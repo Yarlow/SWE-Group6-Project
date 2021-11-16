@@ -17,7 +17,7 @@ export class CreateHotelComponent implements OnInit {
   amenities: string[] = ['Gym', 'Spa', 'Pool', 'Business Office', 'WiFi']
   mode: string = 'create'
   hotelId: string
-
+  hotelObj : Hotel
 
   constructor( private hotelService: HotelService, public route: ActivatedRoute, private userService: UserService, private snackBar: MatSnackBar ) { }
 
@@ -40,6 +40,7 @@ export class CreateHotelComponent implements OnInit {
         this.hotelService.getHotelById(this.hotelId).subscribe(hotelData => {
           console.log(hotelData)
           let hotel = hotelData.hotel
+          this.hotelObj = hotelData.hotel
           let managerString = ''
           for (let manager of hotelData.managers){
             managerString += manager.username + ', '
@@ -77,7 +78,6 @@ export class CreateHotelComponent implements OnInit {
     }
     if (!this.createHotelForm.value.standardPrice && !this.createHotelForm.value.queenPrice && !this.createHotelForm.value.kingPrice) {
         this.snackBar.open("Must have at least one price", "X")
-
         return
     }
     let hotel= {
@@ -97,9 +97,13 @@ export class CreateHotelComponent implements OnInit {
     for (let manager in managerUsernames) {
       managerUsernames[manager] = managerUsernames[manager].trim()
     }
+
     console.log(managerUsernames)
     if (this.mode === 'edit') {
-      this.hotelService.editHotel(hotel, managerUsernames)
+      hotel.rooms = this.hotelObj.rooms
+      console.log(hotel)
+
+      this.hotelService.editHotel(hotel, managerUsernames, this.hotelId)
     } else {
       this.hotelService.createHotel(hotel, managerUsernames);
     }
