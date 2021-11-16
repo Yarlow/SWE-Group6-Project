@@ -123,22 +123,16 @@ router.get('/:RoomId', (req, res, next) => {
       start.setDate(start.getDate() + 1)
     }
 
-    room = FoundReservation.room
+    let room = FoundReservation.room
     console.log("BEFORE DELETE BOKEOND")
     console.log(room)
 
-
     for (i = 0; i <= numOfDays; i++) {
-      roomBookedOn.delete(reqDays[i])
+      room.bookedOn.splice(room.bookedOn.indexOf(i),1)
     }
 
-    room.bookedOn = roomBookedOn
-
     console.log("After DELETE BOKEOND")
-
-
     console.log(room)
-
 
     room.save()
     //if reservation is not in the db
