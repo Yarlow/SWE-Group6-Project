@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-edit-account',
@@ -9,7 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class EditAccountComponent implements OnInit {
   changePasswordForm: FormGroup
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.changePasswordForm = new FormGroup({
@@ -20,7 +21,13 @@ export class EditAccountComponent implements OnInit {
   }
 
   onChangePassword(){
-    
+    if (this.changePasswordForm.value.newPassword === this.changePasswordForm.value.confirmNewPassword){
+      let body = {
+        oldPassword: this.changePasswordForm.value.currentPassword,
+        newPassword: this.changePasswordForm.value.newPassword
+      }
+      this.userService.changePassword(body)
+    }
   }
 
 }

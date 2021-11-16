@@ -127,6 +127,16 @@ router.get('/search/filter', async (req, res, next) => {
     }
   }
 
+  if (req.query.bed) {
+    let bedChoiceRooms
+    await Room.find({ roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
+      console.log(hotels)
+      bedChoiceRooms = hotels;
+    })
+    query.where('_id').in(bedChoiceRooms)
+
+  }
+
   if (req.query.startDate) {
     const days = 1000 * 60 * 60 * 24
     const reqDays = []
