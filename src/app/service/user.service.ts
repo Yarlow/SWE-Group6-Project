@@ -3,6 +3,7 @@ import { User } from '../user/user.model';
 import { HttpClient } from '@angular/common/http'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Injectable({
@@ -16,7 +17,7 @@ export class UserService {
   userUpdated = new Subject<User>()
   private userId: string
   private tokenTimer: NodeJS.Timer;
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) { }
 
   getUser(): User {
     return this.user;
@@ -179,6 +180,21 @@ export class UserService {
     let body = {token: token}
     this.http.post('http://localhost:3000/api/users/token', body).subscribe(responseData => {
 
+    })
+  }
+
+  changePassword(body) {
+    body = {
+      ...body,
+      userId: this.user._id
+    }
+    this.http.patch<{message: string}>('http://localhost:3000/api/users/edit/changePassword', body).subscribe(responseData => {
+      if (responseData.message === "success") {
+        this.router.navigate(['/account'])
+        this.snackBar.open("password changed successfully")
+      } else {
+        this.snackBar.open("The Passwords Don't Match")
+      }
     })
   }
 

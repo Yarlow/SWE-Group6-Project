@@ -203,7 +203,7 @@ router.delete('/:id', (req, res, next) => {
  * This function allows a user to reset their password.
  */
 
-router.patch('/editaccount', (req, res,) => {
+router.patch('/edit/changePassword', (req, res,) => {
   //first find the user that wants to change pw
   User.findById(req.body.userId).then(FoundUser => {
     //if their old password matches then reset to requested password
@@ -213,11 +213,12 @@ router.patch('/editaccount', (req, res,) => {
       FoundUser.save()
       //respond
       res.status(200).json({
-        message: "ok"
+        message: "success"
       })
       //if passwords do not match respond with 401 unautorized
     } else {
       res.status(401).json({
+        message: "noMatch"
         //no body required
       })
     }

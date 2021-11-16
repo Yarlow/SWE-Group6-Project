@@ -177,7 +177,6 @@ router.get('/user/:id', (req, res, next) => {
     //     console.log(populatedReservation)
     //   })
     // }
-    console.log(foundReservations)
     // foundReservations.populate("hotel").then(populatedReservations => {
       // console.log(populatedReservations)
       res.status(200).json({
