@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ManagebookComponent } from './booking/managebook/managebook.component';
 import { NewbookComponent } from './booking/newbook/newbook.component';
 import { HomeComponent } from './home/home.component';
+import { HotelManagerComponent } from './hotel-manager/hotel-manager.component';
 import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.component';
 import { HotelListComponent } from './hotels/hotel-list/hotel-list.component';
 import { AuthGuard } from './service/auth.guard';
@@ -51,7 +52,7 @@ const routes: Routes = [
   },
   {
     path: 'hotel/create',
-    component: CreateHotelComponent  
+    component: CreateHotelComponent
   },
   {
     path: 'hotel/edit',
@@ -60,6 +61,10 @@ const routes: Routes = [
   {
     path: 'hotel/edit/:hotelId',
     component: CreateHotelComponent
+  },
+  {
+    path: 'hotel/manager',
+    component: HotelManagerComponent
   }
 
 ];

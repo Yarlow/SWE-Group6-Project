@@ -5,6 +5,7 @@ import { Hotel } from '../hotel.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserService } from 'src/app/service/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from 'src/app/user/user.model';
 
 @Component({
   selector: 'app-create-hotel',
@@ -16,7 +17,7 @@ export class CreateHotelComponent implements OnInit {
   amenities: string[] = ['Gym', 'Spa', 'Pool', 'Business Office', 'WiFi']
   mode: string = 'create'
   hotelId: string
-
+  hotelObj : Hotel
 
   constructor( private hotelService: HotelService, public route: ActivatedRoute, private userService: UserService, private snackBar: MatSnackBar ) { }
 
@@ -39,6 +40,12 @@ export class CreateHotelComponent implements OnInit {
         this.hotelService.getHotelById(this.hotelId).subscribe(hotelData => {
           console.log(hotelData)
           let hotel = hotelData.hotel
+          this.hotelObj = hotelData.hotel
+          let managerString = ''
+          for (let manager of hotelData.managers){
+            managerString += manager.username + ', '
+          }
+          console.log('managerString' , managerString)
           this.createHotelForm.patchValue({
             'hotelName': hotel.name,
             'numRooms': hotel.rooms,
@@ -47,7 +54,7 @@ export class CreateHotelComponent implements OnInit {
             'kingPrice': hotel.price.king,
             'weekendSurcharge': hotel.price.weekendSurcharge * 100,
             'selectedAmenities': hotel.amenities,
-            'managers': hotelData.managers
+            'managers': managerString
           })
           this.createHotelForm.get('numRooms').disable()
           if (!hotel.price.standard) {
@@ -71,7 +78,6 @@ export class CreateHotelComponent implements OnInit {
     }
     if (!this.createHotelForm.value.standardPrice && !this.createHotelForm.value.queenPrice && !this.createHotelForm.value.kingPrice) {
         this.snackBar.open("Must have at least one price", "X")
-
         return
     }
     let hotel= {
@@ -91,9 +97,13 @@ export class CreateHotelComponent implements OnInit {
     for (let manager in managerUsernames) {
       managerUsernames[manager] = managerUsernames[manager].trim()
     }
+
     console.log(managerUsernames)
     if (this.mode === 'edit') {
-      this.hotelService.editHotel(hotel, managerUsernames)
+      hotel.rooms = this.hotelObj.rooms
+      console.log(hotel)
+
+      this.hotelService.editHotel(hotel, managerUsernames, this.hotelId)
     } else {
       this.hotelService.createHotel(hotel, managerUsernames);
     }

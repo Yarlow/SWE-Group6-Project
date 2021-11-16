@@ -13,7 +13,7 @@ const User = require("../models/user")
  * for the correspoing hotel. If found, 200 response, else 404.
 */
 
-router.get('/:id', (req, res) => {
+router.get('/search/one/:id', (req, res) => {
 
   //mongoose calls .then() function if a hotel is found, if not an error is thrown and caught at the end of this function
   Hotel.findById(req.params.id).then(foundHotel => {
@@ -41,7 +41,7 @@ router.get('/:id', (req, res) => {
 /*
  * get list of  existing hotels.
  */
-router.get('', (req, res, next) => {
+router.get('', async (req, res, next) => {
   Hotel.find().then(documents => {
     res.status(200).json({
       message: "Got Hotels",
@@ -49,14 +49,19 @@ router.get('', (req, res, next) => {
     })
     console.log("hotels have been fetched")
   })
-} )
+})
+
+
+router.get('/test', (req,res,next) => {
+  res.status(200).json({message:"Fuck"})
+})
 
 /*
  * Search hotels
  * to-do: Incorporate date range into the search query.
  */
-router.get('/search', (req, res, next) => {
-  // console.log(req.query)
+router.get('/search/filter', async (req, res, next) => {
+  // res.status(200).json({message:"Fuck You"})
   var query = Hotel.find()
   // console.log('bed choice ' + req.query.bed)
   if (req.query.hotelName){
@@ -73,7 +78,6 @@ router.get('/search', (req, res, next) => {
     query.regex('name', regEx)
 //    q.regex('name', /`Jack`/i) THIS WORKS
 
-    console.log("Hotel name query given " + req.query.hotelName)
 
   }
   if (req.query.amenities){
@@ -123,7 +127,36 @@ router.get('/search', (req, res, next) => {
     }
   }
 
+  if (req.query.startDate) {
+    const days = 1000 * 60 * 60 * 24
+    const reqDays = []
+    var start = new Date(req.query.startDate)
+    var end = new Date(req.query.endDate)
+    var difference = end - start
+    const numOfDays = Math.floor(difference / days) + 1
+    while (difference != 0) {
+      reqDays.push(new Date(start))
+      difference = end - start
+      start.setDate(start.getDate() + 1)
+    }
+    let hotelsWithRooms
 
+    if (req.query.bed === 'Any') {
+      await Room.find({ bookedOn: { $nin: reqDays }}).distinct('hotel').then(hotels => {
+        console.log(hotels)
+        hotelsWithRooms = hotels;
+      })
+    } else {
+      console.log(req.query.bed)
+      await Room.find({ bookedOn: { $nin: reqDays }, roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
+        console.log(hotels)
+        hotelsWithRooms = hotels
+      })
+    }
+
+    query.where('_id').in(hotelsWithRooms)
+    // console.log(query)
+  }
 
   query.exec().then(hotels => {
     return res.status(200).json({
@@ -361,53 +394,61 @@ async function addManagersToHotel(usernames, hotelId) {
   })
 }
 
-router.patch('/edithotel', (req, res, next) => {
+router.patch('', (req, res, next) => {
 
   /* From the examples I am finding online, findByIdAndUpdate works if you know what will be changing prior to the function call so I am going
    * to use findOne and compare values for now. I am going to assume that all fields will be sent in the request, but only the changed fields will
    * be different than what they were previous to the request. I can definitely refactor in the future, just want to have something that works.*/
-
-  Hotel.findOne({ _id: req.body.id }, function (err, foundDoc) {
+   let hotel = req.body.hotel
+   console.log(hotel)
+  Hotel.findOne({ _id: req.body.hotelId }, function (err, foundDoc) {
 
     if (err) {
+      res.status(500).json({
+        message: "Error",
+        err: err
+      })
       console.log("something went fooking wrong")
-    }
-    else {
+    } else if (!foundDoc){
+        res.status(404).json({
+          message: "404"
+        })
+    } else {
       console.log("king price: " + foundDoc.price.king)
       //compare fields. Change document if field has changed.
-      if (foundDoc.name != req.body.name) {
-        console.log("user would like to change the hotel name to: " + req.body.name)
-        foundDoc.name = req.body.name
+      if (foundDoc.name != hotel.name) {
+        console.log("user would like to change the hotel name to: " + hotel.name)
+        foundDoc.name = hotel.name
       }
       //what happens to exising rooms when we change this?
-      if (foundDoc.rooms != req.body.rooms) {
-        console.log("user would like to change the number of rooms to: " + req.body.rooms)
-        foundDoc.rooms = req.body.rooms
+      if (foundDoc.rooms != hotel.rooms) {
+        console.log("user would like to change the number of rooms to: " + hotel.rooms)
+        foundDoc.rooms = hotel.rooms
       }
-      if (foundDoc.price.standard != req.body.price.standard) {
-        console.log("user would like to change standard room price to: " + req.body.price.standard)
-        foundDoc.price.standard = req.body.price.standard
+      if (foundDoc.price.standard != hotel.price.standard) {
+        console.log("user would like to change standard room price to: " + hotel.price.standard)
+        foundDoc.price.standard = hotel.price.standard
       }
-      if (foundDoc.price.queen != req.body.price.queen) {
-        console.log("user would like to change queen room price to: " + req.body.price.queen)
-        foundDoc.price.queen = req.body.price.queen
+      if (foundDoc.price.queen != hotel.price.queen) {
+        console.log("user would like to change queen room price to: " + hotel.price.queen)
+        foundDoc.price.queen = hotel.price.queen
       }
-      if (foundDoc.price.king != req.body.price.king) {
-        console.log("user would like to change king room price to: " + req.body.price.king)
-        foundDoc.price.king = req.body.price.king
+      if (foundDoc.price.king != hotel.price.king) {
+        console.log("user would like to change king room price to: " + hotel.price.king)
+        foundDoc.price.king = hotel.price.king
       }
-      if (foundDoc.price.weekendSurcharge != req.body.price.weekendSurcharge) {
-        console.log("user would like to change weekend surcharge to: " + req.body.price.weekendSurcharge)
-        foundDoc.price.weekendSurcharge = req.body.price.weekendSurcharge
+      if (foundDoc.price.weekendSurcharge != hotel.price.weekendSurcharge) {
+        console.log("user would like to change weekend surcharge to: " + hotel.price.weekendSurcharge)
+        foundDoc.price.weekendSurcharge = hotel.price.weekendSurcharge
       }
       //this is not a valid way to compare arrays, does not work but will fix in future
-      if (foundDoc.amenities != req.body.amenities) {
-        console.log("user would like to change amenities to: " + req.body.amenities)
-        foundDoc.amenities = req.body.amenities
+      if (foundDoc.amenities != hotel.amenities) {
+        console.log("user would like to change amenities to: " + hotel.amenities)
+        foundDoc.amenities = hotel.amenities
       }
-      if (foundDoc.managerPassword != req.body.managerPassword) {
-        console.log("user would like to change the manager password to: " + req.body.managerPassword)
-        foundDoc.managerPassword = req.body.managerPassword
+      if (foundDoc.managerPassword != hotel.managerPassword) {
+        console.log("user would like to change the manager password to: " + hotel.managerPassword)
+        foundDoc.managerPassword = rhotel.managerPassword
       }
 
       //save changes made to the document
@@ -415,11 +456,26 @@ router.patch('/edithotel', (req, res, next) => {
     }
     //respond to request
     res.status(200).json({
-      message: "found reservation",
+      message: "success",
       name: foundDoc.name,
 
     })
   })
+})
+
+router.get('/search/manager', (req, res, next) => {
+  console.log('res received')
+  let query = Hotel.find();
+  let hotelIds = req.query.hotelId
+  console.log(hotelIds)
+  query.where('_id').in(hotelIds)
+  query.exec().then(hotels => {
+    console.log(hotels)
+    res.status(200).json({
+      hotels: hotels
+    })
+  })
+
 })
 
 module.exports = router

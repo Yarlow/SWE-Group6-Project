@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Options } from '@angular-slider/ngx-slider'
 import { HotelService } from 'src/app/service/hotel.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-filter',
@@ -24,7 +25,7 @@ export class FilterComponent implements OnInit {
   amenities: string[] = ['Gym', 'Spa', 'Pool', 'Business Office', 'WiFi']
   selected = -1;
 
-  constructor(private hotelService: HotelService, private router: Router) { }
+  constructor(private hotelService: HotelService, private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -61,6 +62,19 @@ export class FilterComponent implements OnInit {
         urlParam = {...urlParam, bed: this.form.value.selectedBed}
       }
     }
+    if (this.form.value.startDate || this.form.value.endDate) {
+      if (!this.form.value.startDate || !this.form.value.endDate) {
+        this.snackBar.open('Must have both start and end dates', '', { duration: 3000 })
+        return
+      } else {
+        urlParam = {
+          ...urlParam,
+          startDate: this.form.value.startDate,
+          endDate: this.form.value.endDate
+        }
+      }
+    }
+
     this.router.navigate(['/reservations/new'], {queryParams: urlParam})
     // let userFilter = {
     //   nameFilter: this.form.value.hotelName,
