@@ -59,8 +59,11 @@ export class ReservationService {
   }
 
   updatedReservation(id: string, reservationUpdate: any) {
-    this.http.patch<{message: string}>('http://localhost:3000/api/reservations/'+id, reservationUpdate).subscribe(resData => {
-
+    this.http.patch<{message: string, reservation: Reservation}>('http://localhost:3000/api/reservations/'+id, reservationUpdate).subscribe(resData => {
+      let updatedReservations = this.reservations.filter(reservation => reservation._id !== id)
+      updatedReservations.push(resData.reservation)
+      this.reservations = updatedReservations
+      this.reservationsUpdated.next([...this.reservations])
     })
   }
 

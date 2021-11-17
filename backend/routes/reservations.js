@@ -168,7 +168,7 @@ router.get('/user/:id', (req, res, next) => {
   //
   // })
 
-  Reservation.find({user: req.params.id}).populate('hotel').then(foundReservations => {
+  Reservation.find({user: req.params.id}).populate('hotel').populate('user').then(foundReservations => {
     // console.log(foundReservations)
     // let populatedRes = []
     // for (reservation of foundReservations){
@@ -190,13 +190,14 @@ router.get('/user/:id', (req, res, next) => {
 
 //This method will update a reservation in the database
 router.patch('/:id', (req, res, next) => {
-  Reservation.findByIdAndUpdate(req.params.id, req.body).then(foundReservation => {
+  Reservation.findByIdAndUpdate(req.params.id, req.body).populate('hotel').populate('user').then(foundReservation => {
+    console.log(foundReservation)
     console.log("found reservation with id " + foundReservation._id)
     //change the reservations end date
     console.log("this reservation ends " + foundReservation.endDate)
     res.status(200).json({
-      message: "found reservation",
-      id: req.body._id
+      message: "success",
+      reservation: foundReservation
     })
   })
 })

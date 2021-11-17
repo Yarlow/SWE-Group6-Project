@@ -12,11 +12,12 @@ mongoose.connect("mongodb+srv://JShawver:sJBMVTGfqjaEBzGT@cluster0.kfyl3.mongodb
   .then(() =>{
     console.log('connected to database!')
   })
-  .catch(() => {
+  .catch((error) => {
     console.log('connection failed!')
+    console.log(error)
   })
 
-mongoose.connect()
+// mongoose.connect()
 
 app.use(bodyParser.json())
 
