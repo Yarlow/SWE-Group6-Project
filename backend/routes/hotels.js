@@ -61,11 +61,12 @@ router.get('/test', (req,res,next) => {
  * to-do: Incorporate date range into the search query.
  */
 router.get('/search/filter', async (req, res, next) => {
+  console.log(req.query)
   // res.status(200).json({message:"Fuck You"})
   var query = Hotel.find()
   // console.log('bed choice ' + req.query.bed)
   if (req.query.hotelName){
-
+    console.log(req.query.hotelName)
 
     // q.regex('name', `^${req.query.hotelName}$`)
     // q.find({name: { $regex: new RegExp(`^${req.query.hotelName}$`), $options: 'i'}})
@@ -127,7 +128,7 @@ router.get('/search/filter', async (req, res, next) => {
     }
   }
 
-  if (req.query.bed && !req.query.startDate) {
+  if (req.query.bed !=='Any' && !req.query.startDate) {
     let bedChoiceRooms
     await Room.find({ roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
       console.log(hotels)
@@ -156,24 +157,27 @@ router.get('/search/filter', async (req, res, next) => {
         console.log(hotels)
         hotelsWithRooms = hotels;
       })
+      query.where('_id').in(hotelsWithRooms)
     } else {
       console.log(req.query.bed)
       await Room.find({ bookedOn: { $nin: reqDays }, roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
         console.log(hotels)
         hotelsWithRooms = hotels
       })
+      query.where('_id').in(hotelsWithRooms)
     }
 
-    query.where('_id').in(hotelsWithRooms)
-    // console.log(query)
   }
+  // console.log(query)
 
   query.exec().then(hotels => {
+    console.log("exec")
     return res.status(200).json({
         hotels: hotels,
         message: "success"
     })
   }).catch(err => {
+    console.log('err')
     console.log(err)
   })
 

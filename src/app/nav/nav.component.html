@@ -19,7 +19,7 @@
               <li><a class="dropdown-item" routerLink="reservations/manage">Manage Reservations</a></li>
             </ul>
           </li>
-          <li class="nav-item" *ngIf="userRole === 'admin'">
+          <li class="nav-item" *ngIf="this.user && userRole === 'admin'">
               <a class="nav-link" routerLink="/admin">Site Admin</a>
           </li>
           <li class="nav-item" *ngIf="this.user && user.managerOf.length > 0">

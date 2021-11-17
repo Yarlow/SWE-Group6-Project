@@ -31,7 +31,7 @@ export class UserService {
     this.userId = id
   }
 
-  signUp(user: {username: string, password: string, hotelKey: string}) {
+  signUp(user: {username: string, password: string}) {
     this.http.post<{ message: string }>("http://localhost:3000/api/users", user)
       .subscribe(responseData => {
         console.log(responseData.message);
@@ -77,7 +77,7 @@ export class UserService {
     this.authStatusListener.next(false);
     this.user = null;
     this.userUpdated.next(this.user)
-    
+
     this.router.navigate(['/']);
     clearTimeout(this.tokenTimer)
     this.clearAuthData()
