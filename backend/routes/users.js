@@ -64,7 +64,7 @@ router.post('', (req, res, next) => {
     //save user into database
     user.save().then(createdUser => {
       res.status(201).json({
-        message: "Made user",
+        message: "success",
         userId: createdUser._id
       })
     })

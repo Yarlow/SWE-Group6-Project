@@ -36,6 +36,7 @@ export class UserService {
       .subscribe(responseData => {
         console.log(responseData.message);
         this.snackBar.open('Account Created Successfully', 'X')
+        this.login(user)
       })
   }
 
