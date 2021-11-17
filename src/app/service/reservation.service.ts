@@ -47,7 +47,11 @@ export class ReservationService {
   }
 
   getHotelReservations(hotelID: string){
-
+    this.http.get<{ reservations: Reservation[] }>('http://localhost:3000/api/reservations/byHotel/'+hotelID).subscribe(responseData => {
+      this.reservations = responseData.reservations
+      console.log(responseData.reservations)
+      this.reservationsUpdated.next([...this.reservations])
+    })
   }
 
   getPostUpdateListener() {

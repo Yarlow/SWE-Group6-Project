@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ReservationService } from 'src/app/service/reservation.service';
 import { UserService } from 'src/app/service/user.service';
@@ -17,23 +18,32 @@ export class ManagebooklistComponent implements OnInit {
   reservations: Reservation[]
   reservationsSubscription: Subscription
 
-  constructor( private reservationService: ReservationService, private userService: UserService ) { }
+  constructor( public route: ActivatedRoute, private reservationService: ReservationService, private userService: UserService ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('hotelId')) {
+        this.reservationService.getHotelReservations(paramMap.get('hotelId'));
+      } else {
+
+        this.user = this.userService.getUser()
+        this.userSubscription = this.userService.getUserUpdateListener().subscribe((user:User) => {
+          this.user = user
+          console.log("Hiya")
+          this.reservationService.getUserReservations(user._id)
+        })
+        this.reservationService.getUserReservations(localStorage.getItem('userID'))
+
+      }
+      console.log("atempting to get res")
+      this.reservationsSubscription = this.reservationService.getPostUpdateListener().subscribe((reservations: Reservation[]) => {
+        this.reservations = reservations
+        console.log(this.reservations)
+      })
 
 
-    this.user = this.userService.getUser()
-    this.userSubscription = this.userService.getUserUpdateListener().subscribe((user:User) => {
-      this.user = user
-      console.log("Hiya")
-      this.reservationService.getUserReservations(user._id)
     })
-    this.reservationService.getUserReservations(localStorage.getItem('userID'))
 
-    this.reservationsSubscription = this.reservationService.getPostUpdateListener().subscribe((reservations: Reservation[]) => {
-      this.reservations = reservations
-      console.log(this.reservations)
-    })
 
 
     // let res: Reservation = this.user.reservations[0]
