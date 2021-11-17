@@ -10,9 +10,6 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" routerLink="">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Some nav item</a>
-          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Reservations
@@ -21,6 +18,12 @@
               <li><a class="dropdown-item" routerLink="reservations/new">Book a Room</a></li>
               <li><a class="dropdown-item" routerLink="reservations/manage">Manage Reservations</a></li>
             </ul>
+          </li>
+          <li class="nav-item" *ngIf="userRole === 'admin'">
+              <a class="nav-link" routerLink="/admin">Site Admin</a>
+          </li>
+          <li class="nav-item" *ngIf="this.user && user.managerOf.length > 0">
+              <a class="nav-link" routerLink='/hotel/manager'>Hotel Manager</a>
           </li>
         </ul>
 

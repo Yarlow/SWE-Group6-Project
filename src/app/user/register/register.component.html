@@ -14,16 +14,6 @@
       placeholder="password" />
     </mat-form-field>
 
-    <button mat-button (click)="showHotelPassword = !showHotelPassword" type="button">
-      Hotel Manager?
-    </button>
-    <mat-form-field *ngIf="showHotelPassword">
-      <input type="password"
-      matInput
-      formControlName="hotelKey"
-      placeholder="Enter Hotel Key">
-    </mat-form-field>
-
     <div class="bottom">
       <button mat-raised-button type="submit" color="accent">Sign Up</button>
       <p style="float: right">Already have an account? <a routerLink="/login">Login</a></p>

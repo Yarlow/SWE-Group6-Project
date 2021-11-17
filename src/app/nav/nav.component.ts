@@ -28,9 +28,14 @@ export class NavComponent implements OnInit, OnDestroy {
     this.userIsAuthenticated = this.userService.getIsAuth()
     this.authListenerSubscription = this.userService.getAuthStatusListener().subscribe(isAuthenticated => {
       this.userIsAuthenticated = isAuthenticated;
-      this.userRole = this.userService.getRole();
-      console.log(this.userRole)
+      // this.userRole = this.userService.getRole();
+      // console.log(this.userRole)
     });
+
+    this.userSubscription = this.userService.getUserUpdateListener().subscribe(user => {
+        this.user = user;
+        this.userRole = user.role;
+    })
     // this.userSubscription = this.userService.getUserUpdateListener().subscribe((newUser: User) => {
     //   this.user = newUser
     //   console.log(this.user.role)

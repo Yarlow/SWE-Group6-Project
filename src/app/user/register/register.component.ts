@@ -18,7 +18,6 @@ export class RegisterComponent implements OnInit {
     this.signupForm = new FormGroup({
       'username': new FormControl(null, {validators: [Validators.required]}),
       'password': new FormControl(null, {validators: [Validators.required]}),
-      'hotelKey': new FormControl()
     })
   }
 
