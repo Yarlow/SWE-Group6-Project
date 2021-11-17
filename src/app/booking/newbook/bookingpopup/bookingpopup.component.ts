@@ -132,6 +132,8 @@ export class BookingpopupComponent implements OnInit {
     } else {
       this.reservationService.updatedReservation(this.data.reservation._id ,reservation)
     }
+
+    this.dialogref.close();
   }
 
 

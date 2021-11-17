@@ -45,8 +45,10 @@ export class CreateHotelComponent implements OnInit {
           let hotel = hotelData.hotel
           this.hotelObj = hotelData.hotel
           let managerString = ''
+          let i = 0;
           for (let manager of hotelData.managers){
-            managerString += manager.username + ', '
+            managerString += i < hotelData.managers.length - 1 ? manager.username + ', ' : manager.username
+            i++
           }
           console.log('managerString' , managerString)
           this.createHotelForm.patchValue({

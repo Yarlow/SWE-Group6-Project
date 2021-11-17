@@ -20,7 +20,6 @@ export class ManagebooklistItemComponent implements OnInit {
   constructor(private reservationService: ReservationService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    console.log("RES " + this.reservationElement)
     this.formatStartDate = formatDate(this.reservationElement.startDate,'fullDate', 'en_US')
     this.formatEndDate = formatDate(this.reservationElement.endDate,'fullDate', 'en_US')
 
@@ -32,7 +31,6 @@ export class ManagebooklistItemComponent implements OnInit {
       reservation: this.reservationElement
     }
     this.reservationService.openBookingPopup(data);
-    
   }
 
   onDeleteReservation() {
