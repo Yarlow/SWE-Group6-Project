@@ -31,14 +31,11 @@ export class BookingpopupComponent implements OnInit {
   defaultBed: string = ""
   defaultStartDate: Date = null
   defaultEndDate: Date = null
+  defaultPriceToDisplay: [string, number];
   ngOnInit(): void {
     console.log("Booking init");
     this.selectedHotel = this.data.hotel;
     this.weekendSurcharge = this.selectedHotel.price.weekendSurcharge;
-    // this.pricesToDisplay = this.selectedHotel.price
-    console.log(this.pricesToDisplay)
-    // delete this.pricesToDisplay['weekendSurcharge']
-    console.log(this.pricesToDisplay)
 
     if (this.selectedHotel.price.standard){
       this.pricesToDisplay['standard'] = this.selectedHotel.price.standard
@@ -61,19 +58,30 @@ export class BookingpopupComponent implements OnInit {
       this.defaultPrice = this.data.hotel.price[this.defaultBed]
       console.log(this.defaultPrice)
       console.log(this.defaultBed)
+      this.defaultPriceToDisplay = [this.defaultBed, this.defaultPrice]
     }
     // if (this.data.startDate){
     //
     // }
     this.bookingForm = new FormGroup({
-      'selectedPrice': new FormControl(null, {validators: [Validators.required]}),
+      'selectedPrice': new FormControl([this.defaultBed, this.pricesToDisplay[this.defaultBed] ], {validators: [Validators.required]}),
       'startDate': new FormControl(this.defaultStartDate, {validators: [Validators.required]}),
       'endDate': new FormControl(this.defaultEndDate, {validators: [Validators.required]})
     })
+    if (this.data.reservation) {
+      this.bookingForm.patchValue({
+        'selectedPrice' : [this.defaultBed, this.defaultPrice]
+      })
+    }
     this.onChanges()
   }
 
+  compare(c1: [key: string, val: number], c2: [key: string, val: number]) {
+    return c1 && c2 && c1[0] === c2[0]
+  }
+
   onChanges() {
+    console.log(this.bookingForm.value.selectedPrice)
 
     this.bookingForm.valueChanges.subscribe(x => {
       if (this.bookingForm.invalid){
@@ -87,7 +95,7 @@ export class BookingpopupComponent implements OnInit {
   calculatePrice(startDate: Date, endDate: Date){
     let resPrice = 0
     let pricePerNight = this.bookingForm.value.selectedPrice[1];
-
+    console.log(this.bookingForm.value.selectedPrice)
     for (let day = startDate;day <= endDate; day.setDate(day.getDate() + 1)) {
       if (day.getDay() === 0 || day.getDay() === 6) {
 

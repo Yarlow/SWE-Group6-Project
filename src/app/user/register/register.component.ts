@@ -28,7 +28,6 @@ export class RegisterComponent implements OnInit {
     let user = {
       username: this.signupForm.value.username,
       password: this.signupForm.value.password,
-      hotelKey : this.signupForm.value.hotelKey
     }
 
     this.userService.signUp(user);
