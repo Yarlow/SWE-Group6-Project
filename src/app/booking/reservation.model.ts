@@ -1,4 +1,5 @@
 import { Hotel } from "../hotels/hotel.model";
+import { User } from "../user/user.model";
 
 export interface Reservation {
   _id: string
@@ -7,5 +8,6 @@ export interface Reservation {
   endDate: Date,
   price: number,
   bedChoice: string,
-  room: string
+  room: string,
+  user: User
 }

@@ -6,6 +6,8 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserService } from 'src/app/service/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from 'src/app/user/user.model';
+import { ReservationService } from 'src/app/service/reservation.service';
+import { Reservation } from 'src/app/booking/reservation.model';
 
 @Component({
   selector: 'app-create-hotel',
@@ -18,8 +20,9 @@ export class CreateHotelComponent implements OnInit {
   mode: string = 'create'
   hotelId: string
   hotelObj : Hotel
+  reservations: Reservation[]
 
-  constructor( private hotelService: HotelService, public route: ActivatedRoute, private userService: UserService, private snackBar: MatSnackBar ) { }
+  constructor( private hotelService: HotelService, public route: ActivatedRoute, private userService: UserService, private snackBar: MatSnackBar, private reservationService : ReservationService ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -67,6 +70,8 @@ export class CreateHotelComponent implements OnInit {
             this.createHotelForm.get('kingPrice').disable()
           }
         })
+
+
       }
 
     })

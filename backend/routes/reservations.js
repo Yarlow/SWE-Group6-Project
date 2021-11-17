@@ -86,18 +86,18 @@ router.post('', (req, res, next) => {
 
 
 /*Get reservations by room id*/
-router.get('/:RoomId', (req, res, next) => {
-
-  console.log('Room id passed in as a parameter: ' + req.params.RoomId)
-  Room.findById(req.params.RoomId).then(foundRoom => {
-    var start = new Date();
-    console.log("desired start date: " + req.body.startDate)
-    res.status(200).json({
-      message: "ok",
-      "room found": foundRoom
-    })
-  })
-})
+// router.get('/:RoomId', (req, res, next) => {
+//
+//   console.log('Room id passed in as a parameter: ' + req.params.RoomId)
+//   Room.findById(req.params.RoomId).then(foundRoom => {
+//     var start = new Date();
+//     console.log("desired start date: " + req.body.startDate)
+//     res.status(200).json({
+//       message: "ok",
+//       "room found": foundRoom
+//     })
+//   })
+// })
 
  /*
  * Delete a Reservation in the database. Added some error checking.
@@ -217,6 +217,15 @@ router.patch('/:id', (req, res, next) => {
     })
   }
   */
+
+router.get('/byHotel/:hotelId', (req, res, next) => {
+  console.log("looking")
+  Reservation.find({'hotel': req.params.hotelId }).populate('hotel').populate('user').then(reservations => {
+    res.status(200).json({
+      reservations
+    })
+  })
+})
 
 router.get('/test/please/work', (req, res, next) => {
   console.log("WTF")

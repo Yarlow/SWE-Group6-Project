@@ -127,7 +127,7 @@ router.get('/search/filter', async (req, res, next) => {
     }
   }
 
-  if (req.query.bed) {
+  if (req.query.bed && !req.query.startDate) {
     let bedChoiceRooms
     await Room.find({ roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
       console.log(hotels)
