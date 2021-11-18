@@ -384,6 +384,7 @@ function createRooms(createdHotel) {
 }
 
 async function addManagersToHotel(usernames, hotelId) {
+  
   return new Promise( async (resolve, reject) => {
     // check if usernames is NOT an array. if it isn't, turn it into one so i can loop through
     if (!Array.isArray(usernames)){
@@ -410,25 +411,40 @@ async function addManagersToHotel(usernames, hotelId) {
 
 router.patch('', (req, res, next) => {
 
-  /* From the examples I am finding online, findByIdAndUpdate works if you know what will be changing prior to the function call so I am going
-   * to use findOne and compare values for now. I am going to assume that all fields will be sent in the request, but only the changed fields will
-   * be different than what they were previous to the request. I can definitely refactor in the future, just want to have something that works.*/
-   let hotel = req.body.hotel
-   console.log(hotel)
-  Hotel.findOne({ _id: req.body.hotelId }, function (err, foundDoc) {
+  /* Front end will send a json object of a hotel to the backend. This function will compare those fields with the existing 
+   * hotel and update anything that is different.
+   */
 
+  //create hotel out of the json object in request update form
+  let hotel = req.body.hotel
+  let managers = req.body.managerUsernames
+  console.log("*****Managers******: " + managers)
+  console.log("HOTEL IN THE REQUEST: ")
+  console.log(hotel)
+
+  User.find({ managerOf: req.body.hotelId }, function (err, foundUsers) {
+    console.log("*****Users Found*****")
+    console.log(foundUsers)
+  })
+  //query for the hotel in the database
+  Hotel.findOne({ _id: req.body.hotelId }, function (err, foundDoc) {
+  console.log("EXISTING HOTEL IN DATABASE: " + foundDoc)
+
+    //if unknown error occurred 
     if (err) {
       res.status(500).json({
         message: "Error",
         err: err
       })
-      console.log("something went fooking wrong")
+      console.log("something went wrong")
+      //if the document was not found in the database
     } else if (!foundDoc){
         res.status(404).json({
           message: "404"
         })
+      //if the document was found in the database
     } else {
-      console.log("king price: " + foundDoc.price.king)
+      
       //compare fields. Change document if field has changed.
       if (foundDoc.name != hotel.name) {
         console.log("user would like to change the hotel name to: " + hotel.name)
@@ -462,11 +478,12 @@ router.patch('', (req, res, next) => {
       }
       if (foundDoc.managerPassword != hotel.managerPassword) {
         console.log("user would like to change the manager password to: " + hotel.managerPassword)
-        foundDoc.managerPassword = rhotel.managerPassword
+        foundDoc.managerPassword = hotel.managerPassword
       }
 
+
       //save changes made to the document
-      foundDoc.save()
+      //foundDoc.save()
     }
     //respond to request
     res.status(200).json({
