@@ -422,9 +422,16 @@ router.patch('', (req, res, next) => {
   console.log("HOTEL IN THE REQUEST: ")
   console.log(hotel)
 
-  User.find({ managerOf: req.body.hotelId }, function (err, foundUsers) {
+  User.find({ managerOf: req.body.hotelId }, function (err, currentManagers) {
     console.log("*****Users Found*****")
-    console.log(foundUsers)
+    console.log(currentManagers)
+
+    let i = 1;
+
+    for (let man of currentManagers) {
+      console.log("Manager[" + i + "]: " + man.username)
+      i++
+    }
   })
   //query for the hotel in the database
   Hotel.findOne({ _id: req.body.hotelId }, function (err, foundDoc) {
@@ -455,32 +462,37 @@ router.patch('', (req, res, next) => {
         console.log("user would like to change the number of rooms to: " + hotel.rooms)
         foundDoc.rooms = hotel.rooms
       }
+
       if (foundDoc.price.standard != hotel.price.standard) {
         console.log("user would like to change standard room price to: " + hotel.price.standard)
         foundDoc.price.standard = hotel.price.standard
       }
+
       if (foundDoc.price.queen != hotel.price.queen) {
         console.log("user would like to change queen room price to: " + hotel.price.queen)
         foundDoc.price.queen = hotel.price.queen
       }
+
       if (foundDoc.price.king != hotel.price.king) {
         console.log("user would like to change king room price to: " + hotel.price.king)
         foundDoc.price.king = hotel.price.king
       }
+
       if (foundDoc.price.weekendSurcharge != hotel.price.weekendSurcharge) {
         console.log("user would like to change weekend surcharge to: " + hotel.price.weekendSurcharge)
         foundDoc.price.weekendSurcharge = hotel.price.weekendSurcharge
       }
+
       //this is not a valid way to compare arrays, does not work but will fix in future
       if (foundDoc.amenities != hotel.amenities) {
         console.log("user would like to change amenities to: " + hotel.amenities)
         foundDoc.amenities = hotel.amenities
       }
+
       if (foundDoc.managerPassword != hotel.managerPassword) {
         console.log("user would like to change the manager password to: " + hotel.managerPassword)
         foundDoc.managerPassword = hotel.managerPassword
       }
-
 
       //save changes made to the document
       //foundDoc.save()
