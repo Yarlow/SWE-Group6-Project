@@ -17,10 +17,10 @@ router.get('/search/one/:id', (req, res) => {
 
   //mongoose calls .then() function if a hotel is found, if not an error is thrown and caught at the end of this function
   Hotel.findById(req.params.id).then(foundHotel => {
-    User.find().where('managerOf').in(foundHotel._id).exec().then(foundUsers => {
+    User.find().where('managerOf').in(foundHotel._id).exec().then(currentManagers => {
       res.status(200).json({
         hotel: foundHotel,
-        managers: foundUsers
+        updatedManagers: currentManagers
       })
 
     }).catch(err => {
@@ -254,15 +254,15 @@ router.post('', (req, res, next) => {
 
 
     if (req.body.managerUsernames) {
-      addManagersToHotel(req.body.managerUsernames, createdHotel._id).then(() => {
+      addupdatedManagersToHotel(req.body.managerUsernames, createdHotel._id).then(() => {
         return res.status(200).json({
           message: "noice"
         })
-      }).catch(unFoundUsers => {
+      }).catch(uncurrentManagers => {
         return res.status(200).json({
-          message: "managers don't exist",
+          message: "updatedManagers don't exist",
           createdHotel,
-          unFoundUsers
+          uncurrentManagers
         })
       })
     } else {
@@ -383,7 +383,7 @@ function createRooms(createdHotel) {
 
 }
 
-async function addManagersToHotel(usernames, hotelId) {
+async function addupdatedManagersToHotel(usernames, hotelId) {
   
   return new Promise( async (resolve, reject) => {
     // check if usernames is NOT an array. if it isn't, turn it into one so i can loop through
@@ -391,20 +391,20 @@ async function addManagersToHotel(usernames, hotelId) {
       usernames = [usernames].flat()
     }
 
-    let unFoundUsers = []
+    let uncurrentManagers = []
     for (let username of usernames) {
       await User.findOne({username: username}).then(foundUser => {
         console.log(foundUser)
         foundUser.managerOf.push(hotelId)
         foundUser.save()
       }).catch(err => {
-        unFoundUsers.push(username)
+        uncurrentManagers.push(username)
       })
     }
-    if (!unFoundUsers) {
+    if (!uncurrentManagers) {
       resolve()
     } else {
-      reject(unFoundUsers)
+      reject(uncurrentManagers)
     }
   })
 }
@@ -417,15 +417,31 @@ router.patch('', (req, res, next) => {
 
   //create hotel out of the json object in request update form
   let hotel = req.body.hotel
-  let managers = req.body.managerUsernames
-  console.log("*****Managers******: " + managers)
+  let hotelId = req.body.hotelId
+  let updatedManagers = req.body.managerUsernames
+  console.log("*****updatedManagers******: " + updatedManagers)
   console.log("HOTEL IN THE REQUEST: ")
   console.log(hotel)
-
-  User.find({ managerOf: req.body.hotelId }, function (err, foundUsers) {
+  
+  User.find({ managerOf: req.body.hotelId }, function (err, currentManagers) {
     console.log("*****Users Found*****")
-    console.log(foundUsers)
+    console.log(currentManagers)
+    console.log("**** Test Output ****")
+    for (i = 0;i < updatedManagers.length;i++){
+      var existingUser = (currentManagers.indexOf(updatedManagers[i]) > -1)
+      if (!existingUser) {
+        currentManagers[i].managerOf.push(hotelId)
+        currentManagers[i].save()
+      } else {
+        var existingUser = (updatedManagers.indexOf(currentManagers[i]) > -1)
+        if (!existingUser){
+          currentManagers[i].managerOf.delete(hotelId)
+          currentManagers[i].save()
+        }
+      }
+    }
   })
+
   //query for the hotel in the database
   Hotel.findOne({ _id: req.body.hotelId }, function (err, foundDoc) {
   console.log("EXISTING HOTEL IN DATABASE: " + foundDoc)
