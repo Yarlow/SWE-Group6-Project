@@ -20,6 +20,7 @@ export class BookingpopupComponent implements OnInit {
   resPrice: number;
   actionText: string;
   mode: string
+  prompt: string
 
   constructor(
     public dialogref: MatDialogRef<BookingpopupComponent>,
@@ -50,6 +51,7 @@ export class BookingpopupComponent implements OnInit {
 
     this.actionText = this.data.reservation ? "Update Reservation" : "Book Reservation"
     this.mode = this.data.reservation ? "Edit" : "Create"
+    this.prompt = this.mode === 'Edit' ? "Modify Reservation at" : "Book a Room With"
     if (this.data.reservation){
 
       this.defaultStartDate = this.data.reservation.startDate ? this.data.reservation.startDate : null
@@ -72,6 +74,8 @@ export class BookingpopupComponent implements OnInit {
       this.bookingForm.patchValue({
         'selectedPrice' : [this.defaultBed, this.defaultPrice]
       })
+      this.resPrice = this.calculatePrice(new Date(this.bookingForm.value.startDate), new Date(this.bookingForm.value.endDate))
+
     }
     this.onChanges()
   }
