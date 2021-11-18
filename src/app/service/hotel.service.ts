@@ -99,9 +99,9 @@ export class HotelService {
     }
     this.http.post<{message: string, unFoundUsers: string[], createdHotel: Hotel}>('http://localhost:3000/api/hotels', body).subscribe(responseData => {
       console.log(responseData)
-      if (responseData.unFoundUsers.length > 0) {
-          this.snackBar.open('Hotel Created - but some requested users dont exist: ' + responseData.unFoundUsers, 'X');
-          this.router.navigate(['hotel/edit', responseData.createdHotel._id])
+      if (responseData.unFoundUsers && responseData.unFoundUsers.length > 0){
+        this.snackBar.open('Hotel Created - but some requested users dont exist: ' + responseData.unFoundUsers, 'X');
+        this.router.navigate(['hotel/edit', responseData.createdHotel._id])
       } else {
           this.snackBar.open('Hotel Created', 'X');
           this.router.navigate(['/account'])

@@ -39,6 +39,7 @@ import { CreateHotelComponent } from './hotels/create-hotel/create-hotel.compone
 import { AddManagerComponent } from './user/add-manager/add-manager.component';
 import { EditAccountComponent } from './user/account-info/edit-account/edit-account.component';
 import { HotelManagerComponent } from './hotel-manager/hotel-manager.component'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -79,8 +80,8 @@ import { HotelManagerComponent } from './hotel-manager/hotel-manager.component'
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
-
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,7 @@
-<app-hotel-list-item *ngFor="let hotel of hotels"
-[hotelElement] = hotel
-[userRole] = userRole
-></app-hotel-list-item>
+<mat-spinner *ngIf="isLoading" color="accent"></mat-spinner>
+<div *ngIf="!isLoading">
+  <app-hotel-list-item *ngFor="let hotel of hotels"
+  [hotelElement] = hotel
+  [userRole] = userRole
+  ></app-hotel-list-item>
+</div>

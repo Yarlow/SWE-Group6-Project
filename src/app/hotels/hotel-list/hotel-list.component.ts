@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HotelService } from 'src/app/service/hotel.service';
 import { UserService } from 'src/app/service/user.service';
@@ -12,13 +12,13 @@ import { Hotel } from '../hotel.model';
   styleUrls: ['./hotel-list.component.css']
 })
 export class HotelListComponent implements OnInit, OnDestroy {
-
+  isLoading:boolean = false
   hotels: Hotel[] = [];
   private hotelsSub: Subscription;
 
   mode: string = 'reservation';
 
-  constructor(private hotelService: HotelService, private router: Router) { }
+  constructor(private hotelService: HotelService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     // this.onGetHotels();
@@ -28,13 +28,22 @@ export class HotelListComponent implements OnInit, OnDestroy {
     }
 
     if (this.mode === 'reservation') {
-      this.hotelService.getHotels();
+      if (this.route.snapshot.queryParams.length > 0) {
+        console.log('true?')
+        this.hotelService.filterHotels(this.route.snapshot.queryParams)
+      } else {
+        this.hotelService.getHotels();
+      }
+      this.isLoading = true;
       this.hotelsSub = this.hotelService.getHotelUpdateListener().subscribe((hotels: Hotel[]) => {
+        this.isLoading = false;
         this.hotels = hotels;
       })
     } else {
+      this.isLoading = true;
       this.hotelService.getManagerHotels();
       this.hotelsSub = this.hotelService.getHotelUpdateListener().subscribe((hotels: Hotel[]) => {
+        this.isLoading = false;
         this.hotels = hotels;
       })
     }

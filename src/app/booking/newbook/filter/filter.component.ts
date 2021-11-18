@@ -56,8 +56,8 @@ export class FilterComponent implements OnInit {
       urlParam = {...urlParam, maxPrice:this.form.value.weekendPrice[1]}
     }
     if (this.form.value.selectedBed) {
-      if (this.form.value.selectedBed === "any"){
-        urlParam = {...urlParam, bed: "all"}
+      if (this.form.value.selectedBed === "Any"){
+        urlParam = {...urlParam, bed: "Any"}
       } else {
         urlParam = {...urlParam, bed: this.form.value.selectedBed}
       }
@@ -99,7 +99,13 @@ export class FilterComponent implements OnInit {
   }
 
   onClearForm() {
+    this.router.navigate(['/reservations/new'])
     this.form.reset({weekendPrice: [0, 1000]})
+    this.form.patchValue({'selectedBed':"Any"})
+    let urlParam = { bed: "Any"}
+
+    this.hotelService.filterHotels(urlParam)
+
   }
 
 }
