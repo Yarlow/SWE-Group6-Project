@@ -1,4 +1,4 @@
-<h3>Book a Room With {{selectedHotel.name}}</h3>
+<h3>{{prompt}} {{selectedHotel.name}}</h3>
 <form (submit)="onConfirmBook()" [formGroup]="bookingForm" style="display: flex; flex-direction: column;">
   <mat-form-field appearance="fill">
     <mat-label>Enter a reservation range</mat-label>
