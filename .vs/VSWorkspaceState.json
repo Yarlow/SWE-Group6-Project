@@ -2,14 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\backend",
-    "\\backend\\routes",
-    "\\src\\app",
-    "\\src\\app\\booking",
-    "\\src\\app\\booking\\managebook",
-    "\\src\\app\\booking\\managebook\\managebooklist",
-    "\\src\\app\\booking\\managebook\\managebooklist\\managebooklist-item",
-    "\\src\\app\\home"
+    "\\backend\\models",
+    "\\backend\\routes"
   ],
-  "SelectedNode": "\\backend\\routes\\users.js",
+  "SelectedNode": "\\backend\\routes\\hotels.js",
   "PreviewInSolutionExplorer": false
 }
