@@ -34,7 +34,7 @@ export class FilterComponent implements OnInit {
       'weekendPrice' : new FormControl([0,1000]),
       'selectedAmenities' : new FormControl(),
       'selectedBed' : new FormControl('Any'),
-      'weekendPricingCheckbox' : new FormControl(),
+      // 'weekendPricingCheckbox' : new FormControl(),
       'startDate': new FormControl(),
       'endDate': new FormControl()
     })
