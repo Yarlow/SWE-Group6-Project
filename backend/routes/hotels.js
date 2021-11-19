@@ -104,12 +104,13 @@ router.get('/search/filter', async (req, res, next) => {
     // let minPrice = req.query.minPrice ?? 0
     // let maxPrice = req.query.maxPrice ?? 0
 
-    if (req.query.bedChoice === "Any"){
-      query.or(
-        [query.where('price.standard').gt(req.query.minPrice).lt(req.query.maxPrice),
-        query.where('price.queen').gt(req.query.minPrice).lt(req.query.maxPrice),
-        query.where('price.king').gt(req.query.minPrice).lt(req.query.maxPrice)]
-      )
+    if (req.query.bed === "Any"){
+      query.or([
+        {'price.standard': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
+        {'price.queen': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
+        {'price.king': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
+      ])
+
       // q.where('price.standard').gt(req.query.minPrice)
 
     } else if (req.query.bed ==="Standard"){
@@ -119,7 +120,7 @@ router.get('/search/filter', async (req, res, next) => {
       console.log('minprice ' + req.query.minPrice)
       console.log('maxPrice ' + req.query.maxPrice)
 
-    } else if (req.query.bedChoice ==="Queen"){
+    } else if (req.query.bed ==="Queen"){
       query.where('price.queen').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
       query.where('price.queen').lt(req.query.maxPrice)
     } else {
@@ -131,6 +132,7 @@ router.get('/search/filter', async (req, res, next) => {
   if (req.query.bed !=='Any' && !req.query.startDate) {
     let bedChoiceRooms
     await Room.find({ roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
+      console.log("hotels")
       console.log(hotels)
       bedChoiceRooms = hotels;
     })
