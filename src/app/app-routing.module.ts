@@ -52,15 +52,18 @@ const routes: Routes = [
   },
   {
     path: 'hotel/create',
-    component: CreateHotelComponent
+    component: CreateHotelComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'hotel/edit',
     component: HotelListComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'hotel/edit/:hotelId',
-    component: CreateHotelComponent
+    component: CreateHotelComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'hotel/manager',
