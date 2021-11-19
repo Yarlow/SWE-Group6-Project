@@ -28,8 +28,8 @@ export class HotelListComponent implements OnInit, OnDestroy {
     }
 
     if (this.mode === 'reservation') {
-      if (this.route.snapshot.queryParams.length > 0) {
-        console.log('true?')
+      console.log('true?')
+      if (Object.keys(this.route.snapshot.queryParams).length > 0) {
         this.hotelService.filterHotels(this.route.snapshot.queryParams)
       } else {
         this.hotelService.getHotels();
