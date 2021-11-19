@@ -20,7 +20,7 @@ router.get('/search/one/:id', (req, res) => {
     User.find().where('managerOf').in(foundHotel._id).exec().then(currentManagers => {
       res.status(200).json({
         hotel: foundHotel,
-        updatedManagers: currentManagers
+        managers: currentManagers
       })
 
     }).catch(err => {
@@ -384,7 +384,7 @@ function createRooms(createdHotel) {
 }
 
 async function addupdatedManagersToHotel(usernames, hotelId) {
-  
+
   return new Promise( async (resolve, reject) => {
     // check if usernames is NOT an array. if it isn't, turn it into one so i can loop through
     if (!Array.isArray(usernames)){
@@ -411,7 +411,7 @@ async function addupdatedManagersToHotel(usernames, hotelId) {
 
 router.patch('', (req, res, next) => {
 
-  /* Front end will send a json object of a hotel to the backend. This function will compare those fields with the existing 
+  /* Front end will send a json object of a hotel to the backend. This function will compare those fields with the existing
    * hotel and update anything that is different.
    */
 
@@ -422,7 +422,7 @@ router.patch('', (req, res, next) => {
   console.log("*****updatedManagers******: " + updatedManagers)
   console.log("HOTEL IN THE REQUEST: ")
   console.log(hotel)
-  
+
   User.find({ managerOf: req.body.hotelId }, function (err, currentManagers) {
     console.log("*****Users Found*****")
     console.log(currentManagers)
@@ -446,7 +446,7 @@ router.patch('', (req, res, next) => {
   Hotel.findOne({ _id: req.body.hotelId }, function (err, foundDoc) {
   console.log("EXISTING HOTEL IN DATABASE: " + foundDoc)
 
-    //if unknown error occurred 
+    //if unknown error occurred
     if (err) {
       res.status(500).json({
         message: "Error",
@@ -460,7 +460,7 @@ router.patch('', (req, res, next) => {
         })
       //if the document was found in the database
     } else {
-      
+
       //compare fields. Change document if field has changed.
       if (foundDoc.name != hotel.name) {
         console.log("user would like to change the hotel name to: " + hotel.name)

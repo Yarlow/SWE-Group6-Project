@@ -6,14 +6,12 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true
   },
+
   password: {
     type: String,
     required: true
   },
-  // reservations: [{
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Reservation'
-  // }],
+
   managerOf: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Hotel'
@@ -25,6 +23,5 @@ const userSchema = mongoose.Schema({
     default: 'user'
   }
 })
-
 
 module.exports = mongoose.model('User', userSchema)
