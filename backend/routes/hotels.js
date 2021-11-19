@@ -41,15 +41,15 @@ router.get('/search/one/:id', (req, res) => {
 /*
  * get list of  existing hotels.
  */
-router.get('', async (req, res, next) => {
-  Hotel.find().then(documents => {
-    res.status(200).json({
-      message: "Got Hotels",
-      hotels: documents
-    })
-    console.log("hotels have been fetched")
-  })
-})
+// router.get('', async (req, res, next) => {
+//   Hotel.find().then(documents => {
+//     res.status(200).json({
+//       message: "Got Hotels",
+//       hotels: documents
+//     })
+//     console.log("hotels have been fetched")
+//   })
+// })
 
 
 router.get('/test', (req,res,next) => {
@@ -60,117 +60,96 @@ router.get('/test', (req,res,next) => {
  * Search hotels
  * to-do: Incorporate date range into the search query.
  */
-router.get('/search/filter', async (req, res, next) => {
+router.get('', async (req, res, next) => {
   console.log(req.query)
   // res.status(200).json({message:"Fuck You"})
   var query = Hotel.find()
-  // console.log('bed choice ' + req.query.bed)
-  if (req.query.hotelName){
-    console.log(req.query.hotelName)
-
-    // q.regex('name', `^${req.query.hotelName}$`)
-    // q.find({name: { $regex: new RegExp(`^${req.query.hotelName}$`), $options: 'i'}})
-    // q.where('name').in(`/${req.query.hotelName}/i`)
-    // q.find({name: { $regex: `/${req.query.hotelName}/i`}})
-    // q.regex('name', /${req.query.hotelName}/i)
-
-    const regEx = new RegExp(req.query.hotelName, 'i')
-
-    query.regex('name', regEx)
-//    q.regex('name', /`Jack`/i) THIS WORKS
-
-
-  }
-  if (req.query.amenities){
+  if (Object.keys(req.query).length !== 0){
+    if (req.query.hotelName){
+      const regEx = new RegExp(req.query.hotelName, 'i')
+      query.regex('name', regEx)
+    }
+    if (req.query.amenities){
       // q.where('amenities').contains(req.query.amenities)
       if (req.query.amenities === req.query.amenities+''){
         query.where('amenities').in(req.query.amenities)
       } else {
         let amenitiesQuery = {}
         query.where('amenities').all(req.query.amenities)
-        // for (let amen of req.query.amenities) {
-        //   console.log(amen)
-        //   amenitiesQuery = {
-        //     ...amenitiesQuery,
-        //     'amenities': {$in: {amen}}
-        //   }
-        //   // q.where('amenities').in(amen)
-        // }
-        // q.and(amenitiesQuery)
-
       }
-  }
-  if (req.query.minPrice || req.query.maxPrice) {
-    // let minPrice = req.query.minPrice ?? 0
-    // let maxPrice = req.query.maxPrice ?? 0
-
-    if (req.query.bed === "Any"){
-      query.or([
-        {'price.standard': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
-        {'price.queen': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
-        {'price.king': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
-      ])
-
-      // q.where('price.standard').gt(req.query.minPrice)
-
-    } else if (req.query.bed ==="Standard"){
-
-      query.where('price.standard').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
-      query.where('price.standard').lt(req.query.maxPrice)
-      console.log('minprice ' + req.query.minPrice)
-      console.log('maxPrice ' + req.query.maxPrice)
-
-    } else if (req.query.bed ==="Queen"){
-      query.where('price.queen').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
-      query.where('price.queen').lt(req.query.maxPrice)
-    } else {
-      query.where('price.king').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
-      query.where('price.king').lt(req.query.maxPrice)
     }
-  }
+    if (req.query.minPrice || req.query.maxPrice) {
 
-  if (req.query.bed !=='Any' && !req.query.startDate) {
-    let bedChoiceRooms
-    await Room.find({ roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
-      console.log("hotels")
-      console.log(hotels)
-      bedChoiceRooms = hotels;
-    })
-    query.where('_id').in(bedChoiceRooms)
+      if (req.query.bed === "Any"){
+        query.or([
+          {'price.standard': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
+          {'price.queen': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
+          {'price.king': { $gt: req.query.minPrice, $lt: req.query.maxPrice}},
+        ])
 
-  }
 
-  if (req.query.startDate) {
-    const days = 1000 * 60 * 60 * 24
-    const reqDays = []
-    var start = new Date(req.query.startDate)
-    var end = new Date(req.query.endDate)
-    var difference = end - start
-    const numOfDays = Math.floor(difference / days) + 1
-    while (difference != 0) {
-      reqDays.push(new Date(start))
-      difference = end - start
-      start.setDate(start.getDate() + 1)
+
+      } else if (req.query.bed ==="Standard"){
+
+        query.where('price.standard').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
+        query.where('price.standard').lt(req.query.maxPrice)
+        console.log('minprice ' + req.query.minPrice)
+        console.log('maxPrice ' + req.query.maxPrice)
+
+      } else if (req.query.bed ==="Queen"){
+        query.where('price.queen').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
+        query.where('price.queen').lt(req.query.maxPrice)
+      } else {
+        query.where('price.king').gt(req.query.minPrice)//.and().lt(req.query.maxPrice)
+        query.where('price.king').lt(req.query.maxPrice)
+      }
     }
-    let hotelsWithRooms
 
-    if (req.query.bed === 'Any') {
-      await Room.find({ bookedOn: { $nin: reqDays }}).distinct('hotel').then(hotels => {
+    if (req.query.bed !=='Any' && !req.query.startDate) {
+      let bedChoiceRooms
+      await Room.find({ roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
+        console.log("hotels")
         console.log(hotels)
-        hotelsWithRooms = hotels;
+        bedChoiceRooms = hotels;
       })
-      query.where('_id').in(hotelsWithRooms)
-    } else {
-      console.log(req.query.bed)
-      await Room.find({ bookedOn: { $nin: reqDays }, roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
-        console.log(hotels)
-        hotelsWithRooms = hotels
-      })
-      query.where('_id').in(hotelsWithRooms)
+      query.where('_id').in(bedChoiceRooms)
+
+    }
+
+    if (req.query.startDate) {
+      const days = 1000 * 60 * 60 * 24
+      const reqDays = []
+      var start = new Date(req.query.startDate)
+      var end = new Date(req.query.endDate)
+      var difference = end - start
+      const numOfDays = Math.floor(difference / days) + 1
+      while (difference != 0) {
+        reqDays.push(new Date(start))
+        difference = end - start
+        start.setDate(start.getDate() + 1)
+      }
+      let hotelsWithRooms
+
+      if (req.query.bed === 'Any') {
+        await Room.find({ bookedOn: { $nin: reqDays }}).distinct('hotel').then(hotels => {
+          console.log(hotels)
+          hotelsWithRooms = hotels;
+        })
+        query.where('_id').in(hotelsWithRooms)
+      } else {
+        console.log(req.query.bed)
+        await Room.find({ bookedOn: { $nin: reqDays }, roomType: req.query.bed.toLowerCase() }).distinct('hotel').then(hotels => {
+          console.log(hotels)
+          hotelsWithRooms = hotels
+        })
+        query.where('_id').in(hotelsWithRooms)
+      }
+
     }
 
   }
-  // console.log(query)
+
+
 
   query.exec().then(hotels => {
     console.log("exec")

@@ -14,12 +14,12 @@ export class FilterComponent implements OnInit {
   showFilter: boolean = false;
   form: FormGroup;
   showWeekdaySlider: boolean = false;
-  showWeekendSlider: boolean = false;
+  showPriceSlider: boolean = false;
 
   value: number = 100;
   priceSliderOptions: Options = {
     floor: 0,
-    ceil: 1000
+    ceil: 300
   }
   bedOptions: string[] = ['Any', 'Standard', 'Queen', 'King']
   amenities: string[] = ['Gym', 'Spa', 'Pool', 'Business Office', 'WiFi']
@@ -30,8 +30,7 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup({
       'hotelName': new FormControl(),
-      'weekdayPrice' : new FormControl([0, 200]),
-      'weekendPrice' : new FormControl([0,1000]),
+      'priceSlider' : new FormControl([0,300]),
       'selectedAmenities' : new FormControl(),
       'selectedBed' : new FormControl('Any'),
       // 'weekendPricingCheckbox' : new FormControl(),
@@ -51,9 +50,9 @@ export class FilterComponent implements OnInit {
       console.log("AMENITIES FOUDN " + this.form.value.selectedAmenities)
       urlParam = {...urlParam, amenities:this.form.value.selectedAmenities}
     }
-    if (this.form.value.weekendPrice[0]>0 || this.form.value.weekendPrice[1]<1000){
-      urlParam = {...urlParam, minPrice:this.form.value.weekendPrice[0]}
-      urlParam = {...urlParam, maxPrice:this.form.value.weekendPrice[1]}
+    if (this.form.value.priceSlider[0]>0 || this.form.value.priceSlider[1]<300){
+      urlParam = {...urlParam, minPrice:this.form.value.priceSlider[0]}
+      urlParam = {...urlParam, maxPrice:this.form.value.priceSlider[1]}
     }
     if (this.form.value.selectedBed) {
       if (this.form.value.selectedBed === "Any"){
@@ -78,8 +77,8 @@ export class FilterComponent implements OnInit {
     this.router.navigate(['/reservations/new'], {queryParams: urlParam})
     // let userFilter = {
     //   nameFilter: this.form.value.hotelName,
-    //   weekendPriceCheckbox: this.form.value.weekendPricingCheckbox,
-    //   priceFilter: [this.form.value.weekendPrice[0], this.form.value.weekendPrice[1]],
+    //   priceSliderCheckbox: this.form.value.weekendPricingCheckbox,
+    //   priceFilter: [this.form.value.priceSlider[0], this.form.value.priceSlider[1]],
     //   amenities: [this.form.value.selectedAmenities]
     // }
     // console.log("FILTER "+ userFilter)
@@ -100,7 +99,7 @@ export class FilterComponent implements OnInit {
 
   onClearForm() {
     this.router.navigate(['/reservations/new'])
-    this.form.reset({weekendPrice: [0, 1000]})
+    this.form.reset({priceSlider: [0, 300]})
     this.form.patchValue({'selectedBed':"Any"})
     let urlParam = { bed: "Any"}
 

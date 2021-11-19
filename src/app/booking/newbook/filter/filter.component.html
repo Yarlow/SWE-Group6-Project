@@ -38,10 +38,10 @@
 
     <!-- <p style="">Weeknight Price Per Night</p> -->
     <div style="margin-top: 10px;">
-      <button mat-raised-button (click)="showWeekendSlider = !showWeekendSlider" color="accent" type="button">Price Filter</button>
-      <div class="pricingFilter" *ngIf="showWeekendSlider">
+      <button mat-raised-button (click)="showPriceSlider = !showPriceSlider" color="accent" type="button">Price Filter</button>
+      <div class="pricingFilter" *ngIf="showPriceSlider">
         <!-- <mat-checkbox color="primary" formControlName="weekendPricingCheckbox">Weekend Pricing</mat-checkbox> -->
-        <ngx-slider [options]="priceSliderOptions" formControlName="weekendPrice"></ngx-slider>
+        <ngx-slider [options]="priceSliderOptions" formControlName="priceSlider"></ngx-slider>
 
       </div>
 
