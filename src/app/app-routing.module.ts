@@ -64,7 +64,8 @@ const routes: Routes = [
   },
   {
     path: 'hotel/manager',
-    component: HotelManagerComponent
+    component: HotelManagerComponent,
+    canActivate: [AuthGuard]
   }
 
 ];
