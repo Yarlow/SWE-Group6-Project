@@ -40,7 +40,7 @@
     <div style="margin-top: 10px;">
       <button mat-raised-button (click)="showWeekendSlider = !showWeekendSlider" color="accent" type="button">Price Filter</button>
       <div class="pricingFilter" *ngIf="showWeekendSlider">
-        <mat-checkbox color="primary" formControlName="weekendPricingCheckbox">Weekend Pricing</mat-checkbox>
+        <!-- <mat-checkbox color="primary" formControlName="weekendPricingCheckbox">Weekend Pricing</mat-checkbox> -->
         <ngx-slider [options]="priceSliderOptions" formControlName="weekendPrice"></ngx-slider>
 
       </div>
