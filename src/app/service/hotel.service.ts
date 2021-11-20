@@ -8,6 +8,7 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from './user.service';
 import { User } from '../user/user.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,8 @@ export class HotelService {
 
 
   getHotels() {
-    this.http.get<{message: string, hotels: any}>('http://localhost:3000/api/hotels')
+    console.log(environment.apiUrl)
+    this.http.get<{message: string, hotels: any}>(environment.apiUrl + '/api/hotels')
       .subscribe(hotelData => {
         this.hotels = hotelData.hotels;
         this.hotelsUpdated.next([...this.hotels])
@@ -39,7 +41,7 @@ export class HotelService {
 
   getHotelById(hotelId) {
     console.log("Requesting")
-    return this.http.get<{hotel: Hotel, managers: User[]}>('http://localhost:3000/api/hotels/search/one/' + hotelId)
+    return this.http.get<{hotel: Hotel, managers: User[]}>(environment.apiUrl + '/api/hotels/search/one/' + hotelId)
   }
 
 
@@ -52,7 +54,7 @@ export class HotelService {
     console.log(userFilter)
     params = userFilter
     console.log("PARAMS " + params)
-    this.http.get<{hotels: Hotel[], message: string}>('http://localhost:3000/api/hotels', {params: userFilter})
+    this.http.get<{hotels: Hotel[], message: string}>(environment.apiUrl +'/api/hotels', {params: userFilter})
       .subscribe(responseData => {
           this.hotels = responseData.hotels
           this.hotelsUpdated.next([...this.hotels])
@@ -64,7 +66,7 @@ export class HotelService {
       hotel,
       managerUsernames
     }
-    this.http.post<{message: string, unFoundUsers: string[], createdHotel: Hotel}>('http://localhost:3000/api/hotels', body).subscribe(responseData => {
+    this.http.post<{message: string, unFoundUsers: string[], createdHotel: Hotel}>(environment.apiUrl + '/api/hotels', body).subscribe(responseData => {
       console.log(responseData)
       if (responseData.unFoundUsers && responseData.unFoundUsers.length > 0){
         this.snackBar.open('Hotel Created - but some requested users dont exist: ' + responseData.unFoundUsers, 'X');
@@ -82,7 +84,7 @@ export class HotelService {
       managerUsernames,
       hotelId
     }
-    this.http.patch<{message: string, error: Error, }>('http://localhost:3000/api/hotels', body).subscribe(responseData => {
+    this.http.patch<{message: string, error: Error, }>(environment.apiUrl + '/api/hotels', body).subscribe(responseData => {
       if (responseData.message === 'success') {
         this.snackBar.open('Hotel Edited Successfully', 'X')
         let role = this.userService.getRole();
@@ -109,7 +111,7 @@ export class HotelService {
     params = urlParams
 
     console.log(urlParams)
-    this.http.get<{hotels: Hotel[]}>('http://localhost:3000/api/hotels/search/manager', {params: urlParams}).subscribe(hotelData => {
+    this.http.get<{hotels: Hotel[]}>(environment.apiUrl + '/api/hotels/search/manager', {params: urlParams}).subscribe(hotelData => {
       this.hotels = hotelData.hotels;
       this.hotelsUpdated.next([...this.hotels])
     })
