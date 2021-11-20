@@ -408,19 +408,6 @@ router.patch('', (req, res, next) => {
     console.log("*****Users Found*****")
     console.log(currentManagers)
     console.log("**** Test Output ****")
-    for (i = 0;i < updatedManagers.length;i++){
-      var existingUser = (currentManagers.indexOf(updatedManagers[i]) > -1)
-      if (!existingUser) {
-        currentManagers[i].managerOf.push(hotelId)
-        currentManagers[i].save()
-      } else {
-        var existingUser = (updatedManagers.indexOf(currentManagers[i]) > -1)
-        if (!existingUser){
-          currentManagers[i].managerOf.delete(hotelId)
-          currentManagers[i].save()
-        }
-      }
-    }
   })
 
   //query for the hotel in the database

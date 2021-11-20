@@ -127,7 +127,7 @@ router.post('', (req, res, next) => {
     console.log("BEFORE DELETE BOKEOND")
     console.log(room)
 
-    for (i = 0; i <= numOfDays; i++) {
+    for (i = room.bookedOn.indexOf(start); i <= numOfDays; i++) {
       room.bookedOn.splice(room.bookedOn.indexOf(i),1)
     }
 
