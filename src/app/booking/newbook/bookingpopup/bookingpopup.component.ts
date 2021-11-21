@@ -5,6 +5,7 @@ import { DialogData } from 'src/app/service/reservation.service';
 import { Hotel } from 'src/app/hotels/hotel.model';
 import { UserService } from 'src/app/service/user.service';
 import { ReservationService } from '../../../service/reservation.service'
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-bookingpopup',
@@ -26,7 +27,8 @@ export class BookingpopupComponent implements OnInit {
     public dialogref: MatDialogRef<BookingpopupComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private reservationService: ReservationService,
-    private userService: UserService
+    private userService: UserService,
+    private snackBar: MatSnackBar
   ) { }
   defaultPrice: number = 0
   defaultBed: string = ""
@@ -132,12 +134,21 @@ export class BookingpopupComponent implements OnInit {
     if (this.mode === "Create"){
 
       console.log(reservation)
-      this.reservationService.bookReservation(reservation);
+      this.reservationService.bookReservation(reservation).subscribe(responseData => {
+        if (responseData.message === 'no rooms') {
+          console.log("unavailable")
+          this.snackBar.open("No Rooms available for that day or bed type", 'X')
+        } else {
+          this.snackBar.open("Reservation Booked Successfully", 'X')
+          this.dialogref.close()
+        }
+      });
     } else {
       this.reservationService.updatedReservation(this.data.reservation._id ,reservation)
+      this.snackBar.open("Reservation Changed Successfully", 'X')
+      this.dialogref.close();
     }
 
-    this.dialogref.close();
   }
 
 
