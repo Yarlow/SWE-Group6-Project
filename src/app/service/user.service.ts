@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -32,7 +33,7 @@ export class UserService {
   }
 
   signUp(user: {username: string, password: string}) {
-    this.http.post<{ message: string }>("http://localhost:3000/api/users", user)
+    this.http.post<{ message: string }>(environment.apiUrl + '/api/users', user)
       .subscribe(responseData => {
         console.log(responseData.message);
         this.snackBar.open('Account Created Successfully', 'X')
@@ -43,7 +44,7 @@ export class UserService {
   login(user: { username: string, password: string }){
     let responseMessageToReturn: string = ""
     return new Promise((resolve, reject) => {
-      this.http.post<{ message: string, token: string, expiresIn: number, userId: string }>("http://localhost:3000/api/users/login", user)
+      this.http.post<{ message: string, token: string, expiresIn: number, userId: string }>(environment.apiUrl + "/api/users/login", user)
         .subscribe(responseData => {
           const token = responseData.token;
           responseMessageToReturn = responseData.message;
@@ -115,7 +116,7 @@ export class UserService {
 
 
   getSignedInUserInfo() {
-    this.http.get<{user: User}>('http://localhost:3000/api/users/' + this.userId).subscribe(responseData => {
+    this.http.get<{user: User}>(environment.apiUrl + '/api/users/' + this.userId).subscribe(responseData => {
       this.user = {
         _id: responseData.user._id,
         username: responseData.user.username,
@@ -177,7 +178,7 @@ export class UserService {
   testToken(){
     const token = localStorage.getItem("token")
     let body = {token: token}
-    this.http.post('http://localhost:3000/api/users/token', body).subscribe(responseData => {
+    this.http.post(environment.apiUrl + '/api/users/token', body).subscribe(responseData => {
 
     })
   }
@@ -187,7 +188,7 @@ export class UserService {
       ...body,
       userId: this.user._id
     }
-    this.http.patch<{message: string}>('http://localhost:3000/api/users/edit/changePassword', body).subscribe(responseData => {
+    this.http.patch<{message: string}>(environment.apiUrl + '/api/users/edit/changePassword', body).subscribe(responseData => {
       if (responseData.message === "success") {
         this.router.navigate(['/account'])
         this.snackBar.open("password changed successfully")

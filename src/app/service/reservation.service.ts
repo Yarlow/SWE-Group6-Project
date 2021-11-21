@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { BookingpopupComponent } from '../booking/newbook/bookingpopup/bookingpopup.component';
 import { Reservation } from '../booking/reservation.model';
 import { Hotel } from '../hotels/hotel.model';
@@ -22,7 +23,7 @@ export class ReservationService {
   constructor(private http: HttpClient, public dialog: MatDialog) { }
 
   bookReservation(reservation) {
-    this.http.post<{ message: string }>('http://localhost:3000/api/reservations', reservation).subscribe(res => {
+    this.http.post<{ message: string }>(environment.apiUrl + '/api/reservations', reservation).subscribe(res => {
       console.log(res.message)
     })
   }
@@ -39,7 +40,7 @@ export class ReservationService {
 
   getUserReservations(userID: string){
     console.log(userID)
-    this.http.get<{message: string, reservations: Reservation[]}>('http://localhost:3000/api/reservations/user/'+userID).subscribe(responseData => {
+    this.http.get<{message: string, reservations: Reservation[]}>(environment.apiUrl + '/api/reservations/user/'+userID).subscribe(responseData => {
       this.reservations = responseData.reservations
       console.log(responseData.reservations)
       this.reservationsUpdated.next([...this.reservations])
@@ -47,7 +48,7 @@ export class ReservationService {
   }
 
   getHotelReservations(hotelID: string){
-    this.http.get<{ reservations: Reservation[] }>('http://localhost:3000/api/reservations/byHotel/'+hotelID).subscribe(responseData => {
+    this.http.get<{ reservations: Reservation[] }>(environment.apiUrl + '/api/reservations/byHotel/'+hotelID).subscribe(responseData => {
       this.reservations = responseData.reservations
       console.log(responseData.reservations)
       this.reservationsUpdated.next([...this.reservations])
@@ -59,7 +60,7 @@ export class ReservationService {
   }
 
   updatedReservation(id: string, reservationUpdate: any) {
-    this.http.patch<{message: string, reservation: Reservation}>('http://localhost:3000/api/reservations/'+id, reservationUpdate).subscribe(resData => {
+    this.http.patch<{message: string, reservation: Reservation}>(environment.apiUrl + '/api/reservations/'+id, reservationUpdate).subscribe(resData => {
       let updatedReservations = this.reservations.filter(reservation => reservation._id !== id)
       updatedReservations.push(resData.reservation)
       this.reservations = updatedReservations
@@ -68,7 +69,7 @@ export class ReservationService {
   }
 
   deleteReservation(id: string) {
-    this.http.delete<{action:string}>('http://localhost:3000/api/reservations/'+id).subscribe(responseData => {
+    this.http.delete<{action:string}>(environment.apiUrl + '/api/reservations/'+id).subscribe(responseData => {
       if (responseData.action === "deleted"){
         const updatedReservations = this.reservations.filter(reservation => reservation._id !== id)
         this.reservations = updatedReservations

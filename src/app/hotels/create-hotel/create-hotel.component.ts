@@ -21,6 +21,7 @@ export class CreateHotelComponent implements OnInit {
   hotelId: string
   hotelObj : Hotel
   reservations: Reservation[]
+  isLoading: Boolean = false;
 
   constructor( private hotelService: HotelService, public route: ActivatedRoute, private userService: UserService, private snackBar: MatSnackBar, private reservationService : ReservationService ) { }
 
@@ -33,13 +34,14 @@ export class CreateHotelComponent implements OnInit {
         'queenPrice': new FormControl(),
         'kingPrice': new FormControl(),
         'weekendSurcharge': new FormControl(null, {validators: [Validators.required]}),
-        'selectedAmenities': new FormControl(null, {validators: [Validators.required]}),
+        'selectedAmenities': new FormControl(null, {}),
         'managers': new FormControl()
       })
 
       if (paramMap.has('hotelId')) {
         this.mode = 'edit';
         this.hotelId = paramMap.get('hotelId')
+        this.isLoading = true;
         this.hotelService.getHotelById(this.hotelId).subscribe(hotelData => {
           console.log(hotelData)
           let hotel = hotelData.hotel
@@ -71,6 +73,8 @@ export class CreateHotelComponent implements OnInit {
           if (!hotel.price.king) {
             this.createHotelForm.get('kingPrice').disable()
           }
+          this.isLoading = false;
+
         })
 
 
@@ -87,6 +91,7 @@ export class CreateHotelComponent implements OnInit {
         this.snackBar.open("Must have at least one price", "X")
         return
     }
+    this.isLoading = true;
     let hotel= {
       name: this.createHotelForm.value.hotelName,
       rooms: this.createHotelForm.value.numRooms,
