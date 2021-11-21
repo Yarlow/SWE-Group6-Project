@@ -1,4 +1,6 @@
 <h2>Reservation Manager</h2>
+<mat-spinner *ngIf="isLoading" color="accent"></mat-spinner>
+
 <div *ngIf="reservations">
 
   <app-managebooklist-item *ngFor="let res of reservations"

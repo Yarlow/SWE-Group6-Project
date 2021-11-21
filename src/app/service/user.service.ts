@@ -33,12 +33,12 @@ export class UserService {
   }
 
   signUp(user: {username: string, password: string}) {
-    this.http.post<{ message: string }>(environment.apiUrl + '/api/users', user)
-      .subscribe(responseData => {
-        console.log(responseData.message);
-        this.snackBar.open('Account Created Successfully', 'X')
-        this.login(user)
-      })
+    return this.http.post<{ message: string }>(environment.apiUrl + '/api/users', user)
+      // .subscribe(responseData => {
+      //   console.log(responseData.message);
+      //   this.snackBar.open('Account Created Successfully', 'X')
+      //   this.login(user)
+      // })
   }
 
   login(user: { username: string, password: string }){

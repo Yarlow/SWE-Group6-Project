@@ -17,6 +17,7 @@ export class ManagebooklistComponent implements OnInit {
   userSubscription: Subscription
   reservations: Reservation[]
   reservationsSubscription: Subscription
+  isLoading: Boolean = false;
 
   constructor( public route: ActivatedRoute, private reservationService: ReservationService, private userService: UserService ) { }
 
@@ -24,7 +25,9 @@ export class ManagebooklistComponent implements OnInit {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('hotelId')) {
         this.reservationService.getHotelReservations(paramMap.get('hotelId'));
+        this.isLoading = true;
       } else {
+        this.isLoading = true;
 
         this.user = this.userService.getUser()
         this.userSubscription = this.userService.getUserUpdateListener().subscribe((user:User) => {
@@ -37,6 +40,7 @@ export class ManagebooklistComponent implements OnInit {
       }
       console.log("atempting to get res")
       this.reservationsSubscription = this.reservationService.getPostUpdateListener().subscribe((reservations: Reservation[]) => {
+        this.isLoading = false;
         this.reservations = reservations
         console.log(this.reservations)
       })
