@@ -1,4 +1,5 @@
-<div class="container">
+<mat-spinner *ngIf="isLoading" color="accent"></mat-spinner>
+<div class="container" *ngIf="!isLoading">
     <h2>{{mode.charAt(0).toUpperCase() + mode.slice(1)}} hotel</h2>
   <mat-card class="createHotelForm">
     <form (submit)="onCreateHotel()" [formGroup]="createHotelForm">
