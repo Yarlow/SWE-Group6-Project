@@ -48,8 +48,8 @@ router.post('', (req, res, next) => {
     if (foundRoom == null) {
       console.log("dates unavailable")
       //respond
-      res.status(400).json({
-        message: "reservation is not available."
+      res.status(202).json({
+        message: "no rooms"
       })
     }
     //if a room is found
@@ -190,7 +190,7 @@ router.get('/user/:id', (req, res, next) => {
 
 //This method will update a reservation in the database
 router.patch('/:id', (req, res, next) => {
-  Reservation.findByIdAndUpdate(req.params.id, req.body).populate('hotel').populate('user').then(foundReservation => {
+  Reservation.findByIdAndUpdate(req.params.id, req.body, {returnDocument: 'after'}).populate('hotel').populate('user').then(foundReservation => {
     console.log(foundReservation)
     console.log("found reservation with id " + foundReservation._id)
     //change the reservations end date

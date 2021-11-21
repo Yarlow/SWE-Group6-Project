@@ -23,9 +23,7 @@ export class ReservationService {
   constructor(private http: HttpClient, public dialog: MatDialog) { }
 
   bookReservation(reservation) {
-    this.http.post<{ message: string }>(environment.apiUrl + '/api/reservations', reservation).subscribe(res => {
-      console.log(res.message)
-    })
+    return this.http.post<{ message: string }>(environment.apiUrl + '/api/reservations', reservation)
   }
 
   openBookingPopup(data: any) {
@@ -62,6 +60,8 @@ export class ReservationService {
   updatedReservation(id: string, reservationUpdate: any) {
     this.http.patch<{message: string, reservation: Reservation}>(environment.apiUrl + '/api/reservations/'+id, reservationUpdate).subscribe(resData => {
       let updatedReservations = this.reservations.filter(reservation => reservation._id !== id)
+      console.log("updatedReservations")
+      console.log(updatedReservations)
       updatedReservations.push(resData.reservation)
       this.reservations = updatedReservations
       this.reservationsUpdated.next([...this.reservations])
