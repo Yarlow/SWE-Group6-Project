@@ -92,7 +92,7 @@ export class CreateHotelComponent implements OnInit {
         return
     }
     this.isLoading = true;
-    let hotel= {
+    let hotel = {
       name: this.createHotelForm.value.hotelName,
       rooms: this.createHotelForm.value.numRooms,
       price: {
@@ -103,6 +103,8 @@ export class CreateHotelComponent implements OnInit {
       },
       amenities: this.createHotelForm.value.selectedAmenities
     }
+
+
 
     let managerUsernames = this.createHotelForm.value.managers ? this.createHotelForm.value.managers.split(',') : null
 

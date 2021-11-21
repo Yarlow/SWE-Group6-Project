@@ -186,9 +186,9 @@ router.post('', (req, res, next) => {
   let hotel = {
     name: req.body.hotel.name,
     rooms: req.body.hotel.rooms,
-    amenities:req.body.hotel.amenities,
+    amenities: req.body.hotel.amenities ? req.body.hotel.amenities : [],
   }
-
+console.log(hotel)
   //3 possiblities for pricing. standard, queen, or king.
   if (req.body.hotel.price.standard){
     hotel = {
