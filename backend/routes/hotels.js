@@ -415,7 +415,6 @@ router.patch('', (req, res, next) => {
   }
   console.log("HOTEL IN THE REQUEST: ")
   console.log(hotel)
-
   User.find({ managerOf: req.body.hotelId }, function (err, currentManagers) {
     console.log("*****Users Found*****")
     console.log(currentManagers)
@@ -494,7 +493,7 @@ router.patch('', (req, res, next) => {
 
 
       //save changes made to the document
-      //foundDoc.save()
+      foundDoc.save()
     }
     //respond to request
     res.status(200).json({
