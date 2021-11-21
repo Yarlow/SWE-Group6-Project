@@ -3,6 +3,7 @@
  * so forth.
  */
 const express = require("express")
+const hotel = require("../models/hotel")
 const Hotel = require("../models/hotel")
 const Room = require("../models/room")
 const router = express.Router()
@@ -186,7 +187,7 @@ router.post('', (req, res, next) => {
   let hotel = {
     name: req.body.hotel.name,
     rooms: req.body.hotel.rooms,
-    amenities:req.body.hotel.amenities,
+    amenities: req.body.hotel.amenities ? req.body.hotel.amenities : [],
   }
 
   //3 possiblities for pricing. standard, queen, or king.
@@ -390,6 +391,14 @@ async function addupdatedManagersToHotel(usernames, hotelId) {
   })
 }
 
+async function removeHotelManagers(username, hotelId) {
+  User.findOne({username: username}).then(foundUser => {
+    console.log("Removing Manager: " + foundUser)
+    let index = foundUser.indexof(hotelId)
+    foundUser.managerOf.splice(index, 1)
+  })
+}
+
 router.patch('', (req, res, next) => {
 
   /* Front end will send a json object of a hotel to the backend. This function will compare those fields with the existing
@@ -400,14 +409,32 @@ router.patch('', (req, res, next) => {
   let hotel = req.body.hotel
   let hotelId = req.body.hotelId
   let updatedManagers = req.body.managerUsernames
-  console.log("*****updatedManagers******: " + updatedManagers)
+  console.log("*****updatedManagers******: \n")
+  for(i = 0;i < updatedManagers.length;i++){
+    console.log(updatedManagers[i])
+  }
   console.log("HOTEL IN THE REQUEST: ")
   console.log(hotel)
 
   User.find({ managerOf: req.body.hotelId }, function (err, currentManagers) {
     console.log("*****Users Found*****")
     console.log(currentManagers)
-    console.log("**** Test Output ****")
+    if(currentManagers.length < updatedManagers.length){
+      addupdatedManagersToHotel(updatedManagers,hotelId)
+        .then(function (value) { console.log(value) })
+        .catch(err => console.log(err))
+    } else if (updatedManagers.length < currentManagers.length){
+      for(i = 0;i < currentManagers.length;i++){
+        if(!updatedManagers.includes(currentManagers[i])){
+          let username = currentManagers[i]
+          removeHotelManagers(username, hotelId)
+            .then(function (value) { console.log(value) })
+            .catch(err => console.log(err))
+        }
+      }
+    } else {
+      console.log("*** No manager updates ***")
+    }
   })
 
   //query for the hotel in the database
