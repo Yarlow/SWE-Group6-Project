@@ -8,7 +8,7 @@ const Hotel = require("../models/hotel")
 const Room = require("../models/room")
 const router = express.Router()
 const User = require("../models/user")
-
+const mongoose = require("mongoose")
 /*
  * This function takes a hotel objectId and uses it to query
  * for the correspoing hotel. If found, 200 response, else 404.
@@ -391,12 +391,51 @@ async function addupdatedManagersToHotel(usernames, hotelId) {
   })
 }
 
-async function removeHotelManagers(username, hotelId) {
-  User.findOne({username: username}).then(foundUser => {
-    console.log("Removing Manager: " + foundUser)
-    let index = foundUser.indexof(hotelId)
-    foundUser.managerOf.splice(index, 1)
-  })
+function getManagersToAdd(currentManagers, updatedManagers) {
+  // if
+  return updatedManagers.filter( x => !currentManagers.includes(x))
+}
+
+function getmanagersToRemove(currentManagers, updatedManagers) {
+  return currentManagers.filter( x => !updatedManagers.includes(x))
+}
+
+async function removeHotelManagers(usernames, hotelId) {
+
+
+  if (!Array.isArray(usernames)){
+    usernames = [usernames].flat()
+  }
+  let uncurrentManagers = []
+  for (let username of usernames) {
+    await User.findOne({username: username}).then(foundUser => {
+      // console.log("Removing Manager: " + foundUser)
+      console.log(foundUser.managerOf)
+
+      console.log("OBJECT ID TO REMOVE")
+      console.log(mongoose.Types.ObjectId(hotelId))
+      // let index = foundUser.managerOf.indexOf(mongoose.Types.ObjectId(hotelId))
+      let updateArr = foundUser.managerOf.filter(x => !x.toString().includes(hotelId))
+      console.log("updateArr")
+      console.log(updateArr)
+      foundUser.managerOf = updateArr;
+      console.log(foundUser)
+      foundUser.save().catch(err => console.log(err))
+    }).catch(err => {
+      console.log(err)
+      uncurrentManagers.push(username)
+    })
+  }
+  // if (!uncurrentManagers) {
+  //   resolve()
+  // } else {
+  //   reject(uncurrentManagers)
+  // }
+  // User.findOne({username: username}).then(foundUser => {
+  //   console.log("Removing Manager: " + foundUser)
+  //   let index = foundUser.managerOf.indexof(hotelId)
+  //   foundUser.managerOf.splice(index, 1)
+  // })
 }
 
 router.patch('', (req, res, next) => {
@@ -408,32 +447,52 @@ router.patch('', (req, res, next) => {
   //create hotel out of the json object in request update form
   let hotel = req.body.hotel
   let hotelId = req.body.hotelId
-  let updatedManagers = req.body.managerUsernames
+  let updatedManagers = req.body.managerUsernames ? req.body.managerUsernames : []
   console.log("*****updatedManagers******: \n")
-  for(i = 0;i < updatedManagers.length;i++){
-    console.log(updatedManagers[i])
-  }
+  // for(i = 0;i < updatedManagers.length;i++){
+  //   console.log(updatedManagers[i])
+  // }
   console.log("HOTEL IN THE REQUEST: ")
   console.log(hotel)
-  User.find({ managerOf: req.body.hotelId }, function (err, currentManagers) {
+
+  User.find({ managerOf: req.body.hotelId }).distinct('username').then(currentManagers => {
     console.log("*****Users Found*****")
     console.log(currentManagers)
-    if(currentManagers.length < updatedManagers.length){
-      addupdatedManagersToHotel(updatedManagers,hotelId)
-        .then(function (value) { console.log(value) })
-        .catch(err => console.log(err))
-    } else if (updatedManagers.length < currentManagers.length){
-      for(i = 0;i < currentManagers.length;i++){
-        if(!updatedManagers.includes(currentManagers[i])){
-          let username = currentManagers[i]
-          removeHotelManagers(username, hotelId)
-            .then(function (value) { console.log(value) })
-            .catch(err => console.log(err))
-        }
-      }
-    } else {
-      console.log("*** No manager updates ***")
+
+
+    let managersToAdd = getManagersToAdd(currentManagers, updatedManagers);
+    console.log("managersToAdd",managersToAdd)
+    if (managersToAdd.length > 0) {
+      console.log("TRYING TO ADD", managersToAdd)
+      addupdatedManagersToHotel(managersToAdd,hotelId)
     }
+
+    let managersToRemove = getmanagersToRemove(currentManagers, updatedManagers);
+
+    if (managersToRemove.length > 0) {
+      console.log("TRYING TO remove", managersToRemove)
+
+      removeHotelManagers(managersToRemove, hotelId)
+    }
+
+
+    // if(currentManagers.length < updatedManagers.length){
+    //     // .then(function (value) { console.log(value) })
+    //     // .catch(err => console.log(err))
+    // } else if (updatedManagers.length < currentManagers.length){
+    //   for(i = 0;i < currentManagers.length;i++){
+    //     if(!updatedManagers.includes(currentManagers[i])){
+    //       let username = currentManagers[i]
+    //       removeHotelManagers(username, hotelId)
+    //         .then(function (value) { console.log(value) })
+    //         .catch(err => console.log(err))
+    //     }
+    //   }
+    // } else {
+    //   console.log("*** No manager updates ***")
+    // }
+  }).catch(err=>{
+    console.log("error finding users")
   })
 
   //query for the hotel in the database
